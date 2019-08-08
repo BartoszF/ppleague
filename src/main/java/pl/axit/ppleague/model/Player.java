@@ -1,7 +1,6 @@
-package pl.axit.ppleague.player.model;
+package pl.axit.ppleague.model;
 
 import lombok.*;
-import pl.axit.ppleague.user.model.User;
 
 import javax.persistence.*;
 
@@ -18,8 +17,11 @@ public class Player {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "rating")
     private Double rating;
+    @Column(name = "deviation")
     private Double deviation;
+    @Column(name = "volatility")
     private Double volatility;
 
     @OneToOne(cascade = CascadeType.ALL)

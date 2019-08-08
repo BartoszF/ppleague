@@ -1,7 +1,6 @@
-package pl.axit.ppleague.user.model;
+package pl.axit.ppleague.model;
 
 import lombok.*;
-import pl.axit.ppleague.player.model.Player;
 
 import javax.persistence.*;
 
