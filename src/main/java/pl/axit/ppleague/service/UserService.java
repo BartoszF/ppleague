@@ -4,6 +4,8 @@ import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.axit.ppleague.data.request.CreateUserRequest;
+import pl.axit.ppleague.exception.ActivationNotFound;
+import pl.axit.ppleague.exception.UserExistsException;
 import pl.axit.ppleague.model.User;
 import pl.axit.ppleague.model.UserActivation;
 import pl.axit.ppleague.repository.UserActivationRepository;
@@ -26,7 +28,10 @@ public class UserService {
     private UserActivationRepository userActivationRepository;
 
     @Transactional
-    public void createUser(CreateUserRequest request) {
+    public void createUser(CreateUserRequest request) throws UserExistsException {
+        if (userRepository.existsByEmail(request.getEmailAddress())) {
+            throw new UserExistsException(request.getEmailAddress());
+        }
         User user = new User();
 
         user.setEmail(request.getEmailAddress());
@@ -49,5 +54,18 @@ public class UserService {
         activation.setDate(new Timestamp(new Date().getTime()));
 
         userActivationRepository.save(activation);
+    }
+
+    @Transactional
+    public void activateUser(String key) throws ActivationNotFound {
+        UserActivation activation = userActivationRepository.findByActivationKey(key).orElseThrow(() -> new ActivationNotFound(key));
+
+        User user = activation.getUser();
+
+        user.setActive(true);
+
+        userRepository.save(user);
+
+        userActivationRepository.delete(activation);
     }
 }

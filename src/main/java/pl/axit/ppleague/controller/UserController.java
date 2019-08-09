@@ -1,11 +1,9 @@
 package pl.axit.ppleague.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.axit.ppleague.data.request.CreateUserRequest;
+import pl.axit.ppleague.exception.UserExistsException;
 import pl.axit.ppleague.service.UserService;
 
 @RestController
@@ -15,7 +13,12 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public void createUser(@RequestBody CreateUserRequest request) {
+    public void createUser(@RequestBody CreateUserRequest request) throws UserExistsException {
         userService.createUser(request);
+    }
+
+    @GetMapping("/activate/{key}")
+    public void activateUser(@PathVariable("key") String key) {
+        userService.activateUser(key);
     }
 }
