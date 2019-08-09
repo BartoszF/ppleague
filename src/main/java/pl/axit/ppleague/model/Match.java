@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 public class Match {
 
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -26,10 +26,10 @@ public class Match {
     @JoinColumn(name = "player_b", referencedColumnName = "id")
     private Player playerB;
 
-    @Column
+    @Column(name = "player_a_score")
     private Integer playerAScore;
 
-    @Column
+    @Column(name = "player_b_score")
     private Integer playerBScore;
 
     @Column

@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS match
+create TABLE IF NOT EXISTS match
 (
   ID             SERIAL PRIMARY KEY,
   player_a       INTEGER REFERENCES player (ID),

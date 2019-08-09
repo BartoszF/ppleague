@@ -3,24 +3,28 @@ package pl.axit.ppleague.model;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
+@Valid
 public class User {
 
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "username")
     private String name;
 
     @Column(name = "email")
+    @Email
     private String email;
 
     @Column(name = "password")
