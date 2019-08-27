@@ -51,8 +51,8 @@ public class MatchService {
     public CreateMatchResponse createMatch(CreateMatchRequest request) {
         Match match = new Match();
 
-        Player playerA = playerRepository.getOne(request.getPlayerAId());
-        Player playerB = playerRepository.getOne(request.getPlayerBId());
+        Player playerA = playerRepository.findById(request.getPlayerAId()).get();
+        Player playerB = playerRepository.findById(request.getPlayerBId()).get();
 
         match.setPlayerA(playerA);
         match.setPlayerB(playerB);

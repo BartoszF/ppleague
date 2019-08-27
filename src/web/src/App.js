@@ -1,41 +1,145 @@
-import React from 'react';
-import './App.css';
-import {Provider} from "mobx-react";
-import {Route, BrowserRouter as Router, Switch} from "react-router-dom";
+import React from "react";
+import "./App.css";
+import { Provider, observer, inject } from "mobx-react";
+import { Route, Router, Switch } from "react-router-dom";
 import playerStore from "./stores/playerStore";
+import userStore from "./stores/userStore";
 import LadderPage from "./pages/ladderPage/ladderPage";
-import {Layout, Menu} from "antd";
+import { Layout, Menu, notification } from "antd";
+import PrivateRoute from "./components/common/PrivateRoute";
+import LoginPage from "./pages/loginPage/LoginPage";
+import { Component } from "react";
+import SignupPage from "./pages/signupPage/Signup";
+import UserService from "./services/UserService";
+import { ACCESS_TOKEN, APP_NAME } from "./constants";
+
+import history from "./history";
+import AppHeader from "./components/common/AppHeader";
+import LoadingIndicator from "./components/common/LoadingIndicator";
+
 const { Header, Content, Footer } = Layout;
 
-const stores = {playerStore}
+const stores = { playerStore, userStore };
 
-function App() {
+@observer
+class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isLoading: false
+    };
+    this.handleLogout = this.handleLogout.bind(this);
+    this.loadCurrentUser = this.loadCurrentUser.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
+
+    notification.config({
+      placement: "topRight",
+      top: 70,
+      duration: 3
+    });
+  }
+
+  loadCurrentUser() {
+    this.setState({
+      isLoading: true
+    });
+
+    UserService.getCurrentUser()
+      .then(response => {
+        console.log(response);
+
+        userStore.setUser(response);
+
+        console.log(userStore.getUserString());
+        console.log(userStore.isAuthenticated);
+
+        this.setState({
+          isLoading: false
+        });
+
+        history.push("/");
+      })
+      .catch(error => {
+        console.log(error);
+        this.setState({
+          isLoading: false
+        });
+      });
+  }
+
+  componentDidMount() {
+    this.loadCurrentUser();
+  }
+
+  // Handle Logout, Set currentUser and isAuthenticated state which will be passed to other components
+  handleLogout(
+    redirectTo = "/",
+    notificationType = "success",
+    description = "You're successfully logged out."
+  ) {
+    localStorage.removeItem(ACCESS_TOKEN);
+
+    userStore.isAuthenticated = false;
+    userStore.id = 0;
+    userStore.username = "";
+
+    history.push(redirectTo);
+
+    notification[notificationType]({
+      message: APP_NAME,
+      description: description
+    });
+  }
+
+  /*
+ This method is called by the Login component after successful login
+ so that we can load the logged-in user details and set the currentUser &
+ isAuthenticated state, which other components will use to render their JSX
+*/
+  handleLogin() {
+    notification.success({
+      message: APP_NAME,
+      description: "You're successfully logged in."
+    });
+    this.loadCurrentUser();
+  }
+
+  render() {
+    if (this.state.isLoading) {
+      return <LoadingIndicator />;
+    }
     return (
-        <Layout className="layout">
-            <Provider {...stores}>
-                <Router>
-                    <Header>
-                        <div className="logo"/>
-                        <Menu
-                            theme="dark"
-                            mode="horizontal"
-                            defaultSelectedKeys={['2']}
-                            style={{lineHeight: '64px'}}
-                        >
-                            <Menu.Item key="1">nav 1</Menu.Item>
-                            <Menu.Item key="2">nav 2</Menu.Item>
-                            <Menu.Item key="3">nav 3</Menu.Item>
-                        </Menu>
-                    </Header>
-                    <Content style={{padding: '0 50px'}}>
-                        <Switch>
-                            <Route path="/" component={LadderPage}/>
-                        </Switch>
-                    </Content>
-                </Router>
-            </Provider>
-        </Layout>
+      <Layout className="layout">
+        <Provider {...stores}>
+          <Router history={history}>
+            <AppHeader onLogout={this.handleLogout} />
+            <Content className="app-content">
+              <div className="container">
+                <Switch>
+                  <PrivateRoute
+                    exact
+                    path="/"
+                    {...stores}
+                    component={LadderPage}
+                    handleLogout={this.handleLogout}
+                  ></PrivateRoute>
+                  <Route
+                    exact
+                    path="/login"
+                    render={props => (
+                      <LoginPage onLogin={this.handleLogin} {...props} />
+                    )}
+                  ></Route>
+                  <Route exact path="/signup" component={SignupPage} />
+                </Switch>
+              </div>
+            </Content>
+          </Router>
+        </Provider>
+      </Layout>
     );
+  }
 }
 
 export default App;

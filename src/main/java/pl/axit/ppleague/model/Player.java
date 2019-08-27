@@ -1,5 +1,6 @@
 package pl.axit.ppleague.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.goochjs.glicko2.Rating;
 import org.goochjs.glicko2.RatingCalculator;
@@ -28,6 +29,7 @@ public class Player {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnore
     private User user;
 
     public Rating getRatingObject(RatingCalculator ratingCalculator) {

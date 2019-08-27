@@ -1,0 +1,23 @@
+import {observable, action} from "mobx";
+
+class UserStore {
+    @observable username = ""
+    @observable email = ""
+    @observable id = 0
+    @observable player_id = 0
+    @observable isAuthenticated = false
+
+    @action setUser(user) {
+
+        this.id = user.id;
+        this.username = user.name;
+        this.email = user.email;
+        this.isAuthenticated = true;
+    }
+
+    getUserString() {
+        return this.id + " " + this.username + " " + this.isAuthenticated;
+    }
+}
+
+export default new UserStore();

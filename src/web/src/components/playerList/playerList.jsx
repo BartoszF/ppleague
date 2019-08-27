@@ -1,8 +1,11 @@
 import * as React from "react";
 import PlayerListItem from "./playerListItem";
+import { inject, observer } from "mobx-react";
+import PlayerService from "../../services/PlayerService";
 
 
-export default class PlayerList extends React.Component {
+@observer @inject('playerStore')
+class PlayerList extends React.Component {
 
     constructor(props) {
         super(props);
@@ -10,6 +13,12 @@ export default class PlayerList extends React.Component {
         this.state = {
             players: props.players
         }
+    }
+
+    componentDidMount() {
+        PlayerService.getPlayers().then((response) => {
+            this.props.playerStore.setPlayers(response);
+        })
     }
 
     render() {
@@ -22,3 +31,5 @@ export default class PlayerList extends React.Component {
         )
     }
 }
+
+export default PlayerList;
