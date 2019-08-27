@@ -12,11 +12,8 @@ import pl.axit.ppleague.repository.UserActivationRepository;
 import pl.axit.ppleague.repository.UserRepository;
 
 import javax.transaction.Transactional;
-import java.sql.Timestamp;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class UserService {
@@ -26,6 +23,9 @@ public class UserService {
 
     @Autowired
     private UserActivationRepository userActivationRepository;
+//
+//    @Autowired
+//    private EmailService emailService;
 
     @Transactional
     public void createUser(CreateUserRequest request) throws UserExistsException {
@@ -35,7 +35,9 @@ public class UserService {
         User user = new User();
 
         user.setEmail(request.getEmailAddress());
-        user.setActive(false);
+        //user.setActive(false);
+        user.setActive(true);
+
 
         var emailPart = request.getEmailAddress().split("@")[0];
         List<String> nameList = Arrays.asList(emailPart.split("\\."));
@@ -45,15 +47,17 @@ public class UserService {
         user.setPassword(request.getPassword());
 
         user = userRepository.save(user);
-
-        String activationKey = UUID.nameUUIDFromBytes(request.getEmailAddress().getBytes()).toString();
-
-        UserActivation activation = new UserActivation();
-        activation.setActivationKey(activationKey);
-        activation.setUser(user);
-        activation.setDate(new Timestamp(new Date().getTime()));
-
-        userActivationRepository.save(activation);
+//
+//        String activationKey = UUID.nameUUIDFromBytes(request.getEmailAddress().getBytes()).toString();
+//
+//        UserActivation activation = new UserActivation();
+//        activation.setActivationKey(activationKey);
+//        activation.setUser(user);
+//        activation.setDate(new Timestamp(new Date().getTime()));
+//
+//        userActivationRepository.save(activation);
+//
+//        emailService.sendActivationLink(activation);
     }
 
     @Transactional
