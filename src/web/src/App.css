@@ -1,1 +1,10 @@
 @import '~antd/dist/antd.css';
+
+
+.layout {
+    height:100%;
+}
+
+.container {
+    height:100%;
+}

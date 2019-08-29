@@ -1,0 +1,22 @@
+
+
+.ladderContent {
+    height: 80%;
+    margin-top: 30px;
+    margin-bottom: 30px;
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+
+    /*
+    Nope =(
+    margin-left: -25%;
+    margin-top: -25%;
+    */
+
+    /*
+    Yep!
+    */
+    transform: translate(-50%, -50%);
+}

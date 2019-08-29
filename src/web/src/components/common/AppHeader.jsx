@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
 import './AppHeader.css';
 import {Dropdown, Icon, Layout, Menu} from 'antd';
-import { APP_NAME } from '../../constants';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react';
 
@@ -28,11 +27,6 @@ class AppHeader extends Component {
                 <Menu.Item key="/">
                     <Link to="/">
                         <Icon type="home" className="nav-icon"/>
-                    </Link>
-                </Menu.Item>,
-                <Menu.Item key="/survey">
-                    <Link to="/survey">
-                        <Icon type="form" className="nav-icon"/> Surveys
                     </Link>
                 </Menu.Item>,
                 <Menu.Item key="/profile" className="profile-menu">

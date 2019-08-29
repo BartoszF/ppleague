@@ -1,0 +1,29 @@
+
+.playerListItem {
+    height:40px;
+    display:flex;
+    align-items:center;
+    justify-content: space-between;
+    background-image: linear-gradient(to top, #cdc865, #d3ce68, #dad46a, #e0db6d, #e7e170);
+    cursor: pointer;
+}
+
+.playerListItem:hover {
+    background-image: linear-gradient(to top, #f6f16f, #f7f270, #f7f174, #f8f376, #e7e170);
+}
+
+.playerListItem .rank {
+    margin-left:5px;
+}
+
+.playerListItem .name {
+    margin-right:5px;
+}
+
+.playerListItem .rank h2 {
+    color: rgba(57,57,57,0.9);
+}
+
+.playerListItem .name h2 {
+    color: rgba(57,57,57,0.9);
+}

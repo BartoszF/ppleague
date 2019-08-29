@@ -1,17 +1,17 @@
 import * as React from "react";
+import {observer} from "mobx-react";
+import "./PlayerListItem.css";
 
-
-export default class PlayerListItem extends React.Component {
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            player: props.player
-        }
-    }
+@observer
+class PlayerListItem extends React.Component {
 
     render() {
-        return (<div>{this.state.player.name}</div>)
+        return (
+            <div onClick={(ev) => this.props.click(ev,this.props.player)} className={"playerListItem"}>
+                <span className={"rank"}><h2>{this.props.player.playerId}</h2></span>
+                <span className={"name"}><h2>{this.props.player.name}</h2></span>
+            </div>)
     }
 }
+
+export default PlayerListItem

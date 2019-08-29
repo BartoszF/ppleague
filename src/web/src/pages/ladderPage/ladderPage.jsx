@@ -1,26 +1,39 @@
 import * as React from "react";
 import {inject, observer} from "mobx-react";
-import Player from "../../stores/player";
 import PlayerList from "../../components/playerList/playerList";
+import PlayerService from "../../services/PlayerService";
+import {Col, Row} from "antd";
 
-@inject('playerStore') @observer
+import './ladderPage.css';
+import PlayerPane from "../../components/playersPane/playerPane";
+
+@inject('playerStore') @inject('userStore') @observer
 class LadderPage extends React.Component {
 
-    constructor(props) {
-        super(props);
-        this.props.playerStore.players = [
-            new Player(1, "test", 1001, 0.23, 1),
-            new Player(2, "test2", 1002, 0.24, 2)
-        ]
-    }
     componentDidMount() {
-
+        PlayerService.getPlayers().then((response) => {
+            this.props.playerStore.players = response;
+            for(var i =0;i<50;i++)
+            {
+                this.props.playerStore.players.push({playerId: 100+i, name: i});
+            }
+        })
     }
 
     render() {
         return (
-            <div>
-                <PlayerList players={this.props.playerStore.players}/>
+            <div style={{height: "100%"}}>
+                <Col span={5}/>
+                <Col className="ladderContent" span={14}>
+                    <Col style={{height: "100%"}} span={8}>
+                        <PlayerList playerStore={this.props.playerStore} players={this.props.playerStore.players}/>
+                    </Col>
+                    <Col style={{height: "100%"}} span={16}>
+                        <PlayerPane player={this.props.userStore.player}/>
+                        <PlayerPane player={this.props.playerStore.selectedPlayer}/>
+                    </Col>
+                </Col>
+                <Col span={5}/>
             </div>
         )
     }

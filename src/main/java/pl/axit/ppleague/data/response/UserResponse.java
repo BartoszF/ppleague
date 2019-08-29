@@ -11,5 +11,5 @@ public class UserResponse {
     Long id;
     String email;
     String name;
-
+    PlayerResponse player;
 }

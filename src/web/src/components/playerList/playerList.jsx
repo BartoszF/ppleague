@@ -1,31 +1,25 @@
 import * as React from "react";
 import PlayerListItem from "./playerListItem";
-import { inject, observer } from "mobx-react";
-import PlayerService from "../../services/PlayerService";
+import { observer } from "mobx-react";
+import './playerList.css';
 
-
-@observer @inject('playerStore')
+@observer
 class PlayerList extends React.Component {
 
-    constructor(props) {
+    constructor(props){
         super(props);
-
-        this.state = {
-            players: props.players
-        }
     }
 
-    componentDidMount() {
-        PlayerService.getPlayers().then((response) => {
-            this.props.playerStore.setPlayers(response);
-        })
+    onClick(ev, player) {
+        console.log("clicked " + ev + " " + player.name)
+        this.props.playerStore.selectPlayer(player);
     }
 
     render() {
         return (
-            <div>
-                {this.state.players.map((player, index) => {
-                    return <PlayerListItem id={player.id} player={player} />
+            <div className={"playerList"}>
+                {this.props.players.map((player, index) => {
+                    return <PlayerListItem click={this.onClick.bind(this)} key={player.id} player={player} />
                 })}
             </div>
         )

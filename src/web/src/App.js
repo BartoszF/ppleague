@@ -132,6 +132,7 @@ class App extends Component {
                     )}
                   ></Route>
                   <Route exact path="/signup" component={SignupPage} />
+                    <Route render={props => (<div>NotFound</div>)} />
                 </Switch>
               </div>
             </Content>

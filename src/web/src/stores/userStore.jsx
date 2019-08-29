@@ -4,7 +4,7 @@ class UserStore {
     @observable username = ""
     @observable email = ""
     @observable id = 0
-    @observable player_id = 0
+    @observable player = {}
     @observable isAuthenticated = false
 
     @action setUser(user) {
@@ -13,6 +13,7 @@ class UserStore {
         this.username = user.name;
         this.email = user.email;
         this.isAuthenticated = true;
+        this.player = user.player;
     }
 
     getUserString() {
