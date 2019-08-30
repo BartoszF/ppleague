@@ -1,0 +1,28 @@
+.matchButton {
+  position: absolute;
+  height: 40px;
+  background: rgb(6, 139, 59);
+  background: linear-gradient(
+    0deg,
+    rgba(6, 139, 59, 1) 0%,
+    rgba(0, 157, 29, 1) 35%,
+    rgba(36, 177, 0, 1) 100%
+  );
+  width: 100%;
+  margin-top: -20px;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 25px;
+  line-height: 40px;
+  color: rgb(218, 218, 218);
+  cursor: pointer;
+}
+
+.matchButton:hover {
+  background: linear-gradient(
+    0deg,
+    rgba(0, 189, 76, 1) 0%,
+    rgba(0, 219, 40, 1) 35%,
+    rgba(52, 255, 0, 1) 100%
+  );
+}

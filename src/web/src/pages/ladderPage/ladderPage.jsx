@@ -4,19 +4,21 @@ import PlayerList from "../../components/playerList/playerList";
 import PlayerService from "../../services/PlayerService";
 import {Col, Row} from "antd";
 
+import _ from 'lodash';
+
+
 import './ladderPage.css';
 import PlayerPane from "../../components/playersPane/playerPane";
+import MatchButton from "../../components/playersPane/matchButton";
 
 @inject('playerStore') @inject('userStore') @observer
 class LadderPage extends React.Component {
 
     componentDidMount() {
         PlayerService.getPlayers().then((response) => {
-            this.props.playerStore.players = response;
-            for(var i =0;i<50;i++)
-            {
-                this.props.playerStore.players.push({playerId: 100+i, name: i});
-            }
+            //this.props.playerStore.players = response;
+
+            this.props.playerStore.setPlayers(response);
         })
     }
 
@@ -29,7 +31,8 @@ class LadderPage extends React.Component {
                         <PlayerList playerStore={this.props.playerStore} players={this.props.playerStore.players}/>
                     </Col>
                     <Col style={{height: "100%"}} span={16}>
-                        <PlayerPane player={this.props.userStore.player}/>
+                        <PlayerPane player={this.props.playerStore.userPlayer}/>
+                        {!_.isEmpty(this.props.playerStore.selectedPlayer) ? <MatchButton /> : ""}
                         <PlayerPane player={this.props.playerStore.selectedPlayer}/>
                     </Col>
                 </Col>

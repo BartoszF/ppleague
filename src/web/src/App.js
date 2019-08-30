@@ -1,11 +1,12 @@
 import React from "react";
 import "./App.css";
-import { Provider, observer, inject } from "mobx-react";
+import { Provider, observer } from "mobx-react";
 import { Route, Router, Switch } from "react-router-dom";
 import playerStore from "./stores/playerStore";
 import userStore from "./stores/userStore";
+import matchStore from "./stores/matchStore";
 import LadderPage from "./pages/ladderPage/ladderPage";
-import { Layout, Menu, notification } from "antd";
+import { Layout, notification } from "antd";
 import PrivateRoute from "./components/common/PrivateRoute";
 import LoginPage from "./pages/loginPage/LoginPage";
 import { Component } from "react";
@@ -16,10 +17,11 @@ import { ACCESS_TOKEN, APP_NAME } from "./constants";
 import history from "./history";
 import AppHeader from "./components/common/AppHeader";
 import LoadingIndicator from "./components/common/LoadingIndicator";
+import MatchService from "./services/MatchService";
 
-const { Header, Content, Footer } = Layout;
+const { Content } = Layout;
 
-const stores = { playerStore, userStore };
+const stores = { playerStore, userStore, matchStore };
 
 @observer
 class App extends Component {
@@ -50,9 +52,17 @@ class App extends Component {
         console.log(response);
 
         userStore.setUser(response);
+        playerStore.setUserPlayer(response.player);
 
         console.log(userStore.getUserString());
         console.log(userStore.isAuthenticated);
+
+        MatchService.getOngoinMatch().then((response) => {
+          matchStore.setOngoingMatch(response);
+          console.log(response);
+        }).catch(err => {
+          console.log(err);
+        });
 
         this.setState({
           isLoading: false

@@ -8,7 +8,7 @@ class PlayerListItem extends React.Component {
     render() {
         return (
             <div onClick={(ev) => this.props.click(ev,this.props.player)} className={"playerListItem"}>
-                <span className={"rank"}><h2>{this.props.player.playerId}</h2></span>
+                <span className={"rank"}><h2>{this.props.player.standing} </h2></span>
                 <span className={"name"}><h2>{this.props.player.name}</h2></span>
             </div>)
     }
