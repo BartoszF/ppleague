@@ -7,7 +7,7 @@ import { observer } from 'mobx-react';
 
 const Header = Layout.Header;
 
-@observer @inject('userStore')
+@inject('userStore') @inject('matchStore') @observer 
 class AppHeader extends Component {
     constructor(props) {
         super(props);

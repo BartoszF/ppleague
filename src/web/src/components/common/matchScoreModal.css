@@ -1,0 +1,7 @@
+.players {
+  display: flex;
+  align-content: space-between;
+}
+.player {
+  width: 150px;
+}

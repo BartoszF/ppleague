@@ -11,10 +11,13 @@ import pl.axit.ppleague.data.response.CreateMatchResponse;
 import pl.axit.ppleague.data.response.EndMatchResponse;
 import pl.axit.ppleague.data.response.GetMatchesResponse;
 import pl.axit.ppleague.data.response.MatchResponse;
+import pl.axit.ppleague.exception.MatchExistsException;
 import pl.axit.ppleague.model.Match;
 import pl.axit.ppleague.model.Player;
 import pl.axit.ppleague.repository.MatchRepository;
 import pl.axit.ppleague.repository.PlayerRepository;
+import pl.axit.ppleague.repository.UserRepository;
+import pl.axit.ppleague.security.UserPrincipal;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
@@ -30,6 +33,9 @@ public class MatchService {
 
     @Autowired
     private PlayerRepository playerRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private RatingCalculator ratingCalculator;
@@ -64,7 +70,13 @@ public class MatchService {
     }
 
     @Transactional
-    public CreateMatchResponse createMatch(CreateMatchRequest request) {
+    public CreateMatchResponse createMatch(CreateMatchRequest request, UserPrincipal userPrincipal) throws MatchExistsException {
+        Long userId = userPrincipal.getId();
+
+        if (matchRepository.findOngoingMatchForPlayer(userRepository.findById(userId).get().getPlayer()).isPresent()) {
+            throw new MatchExistsException();
+        }
+
         Match match = new Match();
 
         Player playerA = playerRepository.findById(request.getPlayerAId()).get();

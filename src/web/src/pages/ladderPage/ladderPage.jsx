@@ -2,7 +2,7 @@ import * as React from "react";
 import {inject, observer} from "mobx-react";
 import PlayerList from "../../components/playerList/playerList";
 import PlayerService from "../../services/PlayerService";
-import {Col, Row} from "antd";
+import {Col} from "antd";
 
 import _ from 'lodash';
 

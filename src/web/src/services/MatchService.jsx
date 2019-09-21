@@ -21,6 +21,19 @@ const MatchService = {
             url: "/match/ongoing",
             method: 'GET'
         });
+    },
+
+    endMatch: function(playerAScore,playerBScore, matchId) {
+        let body = {
+            matchId: matchId,
+            playerAScore: playerAScore,
+            playerBScore: playerBScore
+        }
+        return request({
+            url: "/match/end",
+            method: 'POST',
+            body: JSON.stringify(body)
+        })
     }
 
 }

@@ -8,6 +8,7 @@ import pl.axit.ppleague.data.response.CreateMatchResponse;
 import pl.axit.ppleague.data.response.EndMatchResponse;
 import pl.axit.ppleague.data.response.GetMatchesResponse;
 import pl.axit.ppleague.data.response.MatchResponse;
+import pl.axit.ppleague.exception.MatchExistsException;
 import pl.axit.ppleague.model.Player;
 import pl.axit.ppleague.repository.MatchRepository;
 import pl.axit.ppleague.repository.PlayerRepository;
@@ -37,8 +38,8 @@ public class MatchController {
     }
 
     @PostMapping
-    public CreateMatchResponse createMatch(@RequestBody CreateMatchRequest request) {
-        return matchService.createMatch(request);
+    public CreateMatchResponse createMatch(@CurrentUser UserPrincipal currentUser, @RequestBody CreateMatchRequest request) throws MatchExistsException {
+        return matchService.createMatch(request, currentUser);
     }
 
     @PostMapping("/end")
