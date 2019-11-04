@@ -4,12 +4,12 @@
     display:flex;
     align-items:center;
     justify-content: space-between;
-    background-image: linear-gradient(to top, #cdc865, #d3ce68, #dad46a, #e0db6d, #e7e170);
     cursor: pointer;
+    border-bottom: 1px solid rgba(165, 165, 165, 0.7);
 }
 
 .playerListItem:hover {
-    background-image: linear-gradient(to top, #f6f16f, #f7f270, #f7f174, #f8f376, #e7e170);
+    background-color: rgba(200, 200, 200, 0.8);
 }
 
 .playerListItem .rank {

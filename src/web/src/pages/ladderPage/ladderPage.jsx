@@ -24,19 +24,15 @@ class LadderPage extends React.Component {
 
     render() {
         return (
-            <div style={{height: "100%"}}>
-                <Col span={5}/>
-                <Col className="ladderContent" span={14}>
-                    <Col style={{height: "100%"}} span={8}>
-                        <PlayerList playerStore={this.props.playerStore} players={this.props.playerStore.players}/>
-                    </Col>
-                    <Col style={{height: "100%"}} span={16}>
-                        <PlayerPane player={this.props.playerStore.userPlayer}/>
-                        {!_.isEmpty(this.props.playerStore.selectedPlayer) ? <MatchButton /> : ""}
-                        <PlayerPane player={this.props.playerStore.selectedPlayer}/>
-                    </Col>
+            <div className="ladderContent" style={{height: "100%"}}>
+                <Col style={{height: "100%"}} span={5}>
+                    <PlayerList playerStore={this.props.playerStore} players={this.props.playerStore.players}/>
                 </Col>
-                <Col span={5}/>
+                <Col style={{height: "100%"}} span={14}>
+                    <PlayerPane player={this.props.playerStore.userPlayer}/>
+                    {!_.isEmpty(this.props.playerStore.selectedPlayer) ? <MatchButton/> : ""}
+                    <PlayerPane player={this.props.playerStore.selectedPlayer}/>
+                </Col>
             </div>
         )
     }

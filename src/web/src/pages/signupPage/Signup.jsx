@@ -1,14 +1,9 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import "./Signup.css";
-import { Link } from "react-router-dom";
-import {
-  APP_NAME,
-  EMAIL_MAX_LENGTH,
-  PASSWORD_MAX_LENGTH,
-  PASSWORD_MIN_LENGTH
-} from "../../constants";
+import {Link} from "react-router-dom";
+import {APP_NAME, EMAIL_MAX_LENGTH, PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH} from "../../constants";
 
-import { Button, Form, Input, notification } from "antd";
+import {Button, Form, Input, notification} from "antd";
 import UserService from '../../services/UserService';
 
 const FormItem = Form.Item;
@@ -152,6 +147,22 @@ class SignupPage extends Component {
         errorMsg: "Email not valid"
       };
     }
+
+      if (!email.includes("@siemens-logistics.com")) {
+          return {
+              validateStatus: "error",
+              errorMsg: "Email is not from 'siemens-logistics.com' domain"
+          }
+      }
+
+      const firstParts = email.split("@")[0].split(".").length;
+
+      if (firstParts != 2) {
+          return {
+              validateStatus: "error",
+              errorMsg: "Email is not in 'name.surname@siemens-logistics.com' form"
+          }
+      }
 
     if (email.length > EMAIL_MAX_LENGTH) {
       return {
