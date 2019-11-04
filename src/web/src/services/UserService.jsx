@@ -48,6 +48,13 @@ const UserService = {
             url: "/users/" + username,
             method: 'GET'
         });
+    },
+
+    getNotifications: function() {
+        return request({
+            url: "/user/notifications",
+            method: 'GET'
+        })
     }
 }
 

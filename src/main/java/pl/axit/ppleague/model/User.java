@@ -7,6 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -39,4 +40,8 @@ public class User {
     @OneToOne(mappedBy = "user")
     @JsonBackReference
     private Player player;
+
+    @OneToMany(mappedBy = "notifier")
+    @JsonBackReference
+    private List<Notification> notifications;
 }

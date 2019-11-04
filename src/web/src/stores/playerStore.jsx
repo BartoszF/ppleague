@@ -20,7 +20,7 @@ class PlayerStore {
                 this.userPlayer = element;
             }
 
-            if(element.playerId === this.selectedPlayer.playerId)
+            if(this.selectedPlayer != null && element.playerId === this.selectedPlayer.playerId)
             {
                 this.selectedPlayer = element;
             }

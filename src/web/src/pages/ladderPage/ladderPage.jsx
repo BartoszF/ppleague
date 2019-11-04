@@ -13,6 +13,7 @@ import PlayerPane from "../../components/playersPane/playerPane";
 class LadderPage extends React.Component {
 
     componentDidMount() {
+        this.props.playerStore.selectPlayer(null);
         PlayerService.getPlayers().then((response) => {
             this.props.playerStore.setPlayers(response);
         })

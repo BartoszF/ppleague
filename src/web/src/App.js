@@ -64,6 +64,12 @@ class App extends Component {
           console.log(err);
         });
 
+        UserService.getNotifications().then((response) => {
+            console.log(response);
+        }).catch(err => {
+            console.log(response);
+        })
+
         this.setState({
           isLoading: false
         });

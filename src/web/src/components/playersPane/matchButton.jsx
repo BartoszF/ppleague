@@ -20,7 +20,9 @@ class MatchButton extends React.Component {
     }
 
     samePlayerAsMatch(playerId) {
-        return this.props.matchStore.ongoingMatch && this.props.matchStore.ongoingMatch.playerB && this.props.matchStore.ongoingMatch.playerB.id === playerId;
+        return this.props.matchStore.ongoingMatch
+                && this.props.matchStore.ongoingMatch.playerB
+                && (this.props.matchStore.ongoingMatch.playerB.id === playerId || this.props.matchStore.ongoingMatch.playerA.id === playerId);
     }
 
     onClick(ev) {
@@ -65,6 +67,16 @@ class MatchButton extends React.Component {
             this.setState({bScore: score});
         }
 
+    getNames()
+    {
+        return (
+            <div className="names">
+                <span>{this.props.matchStore.ongoingMatch.playerA.user.username}</span>
+                <span>{this.props.matchStore.ongoingMatch.playerB.user.username}</span>
+            </div>
+        )
+    }
+
     getInputs() {
         if (this.samePlayerAsMatch(this.props.playerStore.selectedPlayer.playerId)) {
             return <div className="inputs">
@@ -74,7 +86,6 @@ class MatchButton extends React.Component {
                     size={"large"}
                     onChange={this.playerAScoreChange}
                 />
-                <span> : </span>
                 <InputNumber
                     defaultValue={0}
                     min={0}
@@ -88,6 +99,7 @@ class MatchButton extends React.Component {
     render() {
         return (
             <div className="matchButton">
+                {this.getNames()}
                 {this.getInputs()}
                 <div
                     onClick={this.onClick.bind(this)}

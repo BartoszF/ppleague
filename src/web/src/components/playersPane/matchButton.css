@@ -34,3 +34,22 @@
     vertical-align: middle;
     justify-content: center;
 }
+
+.matchButton .inputs > div {
+    margin-left:10px;
+    margin-right:10px;
+}
+
+.matchButton .names {
+        position: absolute;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        top: -95px;
+        font-size: 22px;
+}
+
+.matchButton .names > span {
+    margin-left:12px;
+    margin-right:12px;
+}
