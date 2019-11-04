@@ -3,6 +3,7 @@ import * as React from "react";
 import "./matchButton.css";
 import {inject, observer} from "mobx-react";
 import MatchService from "../../services/MatchService";
+import PlayerService from "../../services/PlayerService";
 import MatchScoreModal from "../common/matchScoreModal";
 import {InputNumber} from "antd";
 
@@ -12,18 +13,34 @@ import {InputNumber} from "antd";
 class MatchButton extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {modal: false};
+        this.state = {aScore: 0, bScore: 0}
+
+        this.playerAScoreChange = this.playerAScoreChange.bind(this);
+        this.playerBScoreChange = this.playerBScoreChange.bind(this);
     }
 
     samePlayerAsMatch(playerId) {
-        return this.props.matchStore.ongoingMatch.playerB && this.props.matchStore.ongoingMatch.playerB.id === playerId;
+        return this.props.matchStore.ongoingMatch && this.props.matchStore.ongoingMatch.playerB && this.props.matchStore.ongoingMatch.playerB.id === playerId;
     }
 
     onClick(ev) {
         if (
             this.samePlayerAsMatch(this.props.playerStore.selectedPlayer.playerId)
         ) {
-            this.showModal();
+            console.log(this.state);
+            MatchService.endMatch(this.state.aScore, this.state.bScore, this.props.matchStore.ongoingMatch.id)
+                .then(response => {
+                    console.log(response);
+                    this.props.matchStore.ongoingMatch = null;
+                    this.setState({aScore: 0, bScore: 0})
+                    PlayerService.getPlayers().then((response) => {
+                        this.props.playerStore.setPlayers(response);
+                    })
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+
             return;
         }
 
@@ -40,20 +57,29 @@ class MatchButton extends React.Component {
             });
     }
 
-    showModal = () => {
-        this.setState({
-            modal: true
-        });
-    };
+    playerAScoreChange(score) {
+        this.setState({aScore: score});
+    }
+
+    playerBScoreChange(score) {
+            this.setState({bScore: score});
+        }
 
     getInputs() {
         if (this.samePlayerAsMatch(this.props.playerStore.selectedPlayer.playerId)) {
-            return <div style={{position: 'absolute'}}>
+            return <div className="inputs">
                 <InputNumber
                     defaultValue={0}
                     min={0}
                     size={"large"}
                     onChange={this.playerAScoreChange}
+                />
+                <span> : </span>
+                <InputNumber
+                    defaultValue={0}
+                    min={0}
+                    size={"large"}
+                    onChange={this.playerBScoreChange}
                 />
             </div>
         }
@@ -61,12 +87,12 @@ class MatchButton extends React.Component {
 
     render() {
         return (
-            <div>
+            <div className="matchButton">
                 {this.getInputs()}
                 <div
                     onClick={this.onClick.bind(this)}
                     className={
-                        "matchButton " +
+                    "button " +
                         (this.samePlayerAsMatch(
                             this.props.playerStore.selectedPlayer.playerId
                         )
@@ -77,9 +103,6 @@ class MatchButton extends React.Component {
                     {this.samePlayerAsMatch(this.props.playerStore.selectedPlayer.playerId)
                         ? "END MATCH"
                         : "MATCH"}
-                    <MatchScoreModal
-                        visible={this.state.modal}
-                    />
                 </div>
             </div>
         );

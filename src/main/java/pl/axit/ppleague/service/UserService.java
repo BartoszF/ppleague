@@ -49,7 +49,7 @@ public class UserService {
         List<String> nameList = Arrays.asList(emailPart.split("\\."));
         String name = WordUtils.capitalizeFully(String.join(" ", nameList));
 
-        user.setName(name);
+        user.setUsername(name);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         user = userRepository.save(user);

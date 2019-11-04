@@ -6,6 +6,8 @@ class PlayerStore {
     @observable userPlayer = {}
 
     @action setPlayers(players) {
+        this.players = [];
+
         players.sort((a,b) => {
             return b.rating - a.rating;
         })
@@ -15,7 +17,12 @@ class PlayerStore {
             this.players.push(element);
             if(element.playerId === this.userPlayer.playerId)
             {
-                this.userPlayer.standing = element.standing;
+                this.userPlayer = element;
+            }
+
+            if(element.playerId === this.selectedPlayer.playerId)
+            {
+                this.selectedPlayer = element;
             }
         });
     }

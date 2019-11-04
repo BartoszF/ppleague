@@ -4,7 +4,7 @@ import { observer, inject } from "mobx-react";
 import './playerList.css';
 import MatchService from "../../services/MatchService";
 
-@inject('matchStore') @observer
+@inject('matchStore') @inject('playerStore') @observer
 class PlayerList extends React.Component {
 
     onClick(ev, player) {

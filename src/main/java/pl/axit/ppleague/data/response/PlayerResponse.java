@@ -14,6 +14,6 @@ public class PlayerResponse {
     private String name;
 
     public static PlayerResponse from(Player player) {
-        return PlayerResponse.builder().playerId(player.getId()).rating(player.getRating()).name(player.getUser().getName()).build();
+        return PlayerResponse.builder().playerId(player.getId()).rating(player.getRating()).name(player.getUser().getUsername()).build();
     }
 }

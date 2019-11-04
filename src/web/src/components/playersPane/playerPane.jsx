@@ -3,7 +3,13 @@ import "./playerPane.css";
 import _ from "lodash";
 import { Avatar } from "antd";
 
+import MatchButton from "./matchButton";
+
 class PlayerPane extends React.Component {
+
+  matchButton() {
+    if (this.props.other) return (<MatchButton/>);
+  }
   render() {
     if (_.isEmpty(this.props.player)) {
       return <div className={"playerPane"}></div>;
@@ -20,6 +26,8 @@ class PlayerPane extends React.Component {
           <h2>Rating</h2>
           <h2>{this.props.player.rating}</h2>
         </div>
+
+        {this.matchButton()}
       </div>
     );
   }
