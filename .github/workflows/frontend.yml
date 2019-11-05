@@ -25,8 +25,6 @@ jobs:
         secrets: ${{ secrets.HEROKU_API_TOKEN }}
     - name: Change dir
       run: cd src/web
-    - name: Init git
-      run: git init && git add -A && git commit -m "Push"
     - name: Push web to heroku
       uses: actions/heroku@1.0.0
       with:
