@@ -12,10 +12,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    
-    - uses: actions/setup-node@v1.1.0
-      with:
-        node-version: '12.x'
     - name: Login to heroku
       uses: actions/heroku@1.0.0
       env:
@@ -25,10 +21,13 @@ jobs:
         secrets: ${{ secrets.HEROKU_API_TOKEN }}
     - name: Change dir
       run: cd src/web
-    - name: Push web to heroku
+    - name: Deploy jar to heroku
       uses: actions/heroku@1.0.0
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
       with:
-        args: "container:push -a pp-league"
+        args: "builds:create -a pp-league"
+        secrets: ${{ secrets.HEROKU_API_TOKEN }}
       
       
     
