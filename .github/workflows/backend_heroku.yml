@@ -18,7 +18,21 @@ jobs:
         java-version: 1.11
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-    - name: Deploy to heroku
+    - name: Login to heroku
+      uses: actions/heroku@1.0.0
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
-      run: git push https://heroku:${{ secrets.HEROKU_API_TOKEN }}@git.heroku.com/ppleague-backend.git master:master
+      with:
+        args: "container:login"
+        secrets: ${{ secrets.HEROKU_API_TOKEN }}
+    - name: Install build plugin
+      uses: actions/heroku@1.0.0
+      with:
+        args: "plugins:install heroku-builds"
+    - name: Deploy jar to heroku
+      uses: actions/heroku@1.0.0
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+      with:
+        args: "builds:create -a ppleague-backend"
+        secrets: ${{ secrets.HEROKU_API_TOKEN }}
