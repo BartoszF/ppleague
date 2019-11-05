@@ -1,7 +1,7 @@
 {
   "name": "ppleague-web",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "proxy": "https://ppleague-backend.herokuapp.com/",
   "dependencies": {
     "@babel/plugin-proposal-decorators": "^7.4.4",
