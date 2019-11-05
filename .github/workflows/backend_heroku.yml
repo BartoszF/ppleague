@@ -33,5 +33,5 @@ jobs:
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
       with:
-        args: "builds:create -a ppleague_backend"
+        args: "builds:create -a ppleague-backend"
         secrets: ${{ secrets.HEROKU_API_TOKEN }}
