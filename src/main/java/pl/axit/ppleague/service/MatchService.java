@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.axit.ppleague.data.request.CreateMatchRequest;
 import pl.axit.ppleague.data.request.EndMatchRequest;
-import pl.axit.ppleague.data.response.CreateMatchResponse;
-import pl.axit.ppleague.data.response.EndMatchResponse;
-import pl.axit.ppleague.data.response.GetMatchesResponse;
-import pl.axit.ppleague.data.response.MatchResponse;
+import pl.axit.ppleague.data.response.*;
 import pl.axit.ppleague.exception.MatchExistsException;
 import pl.axit.ppleague.model.Match;
 import pl.axit.ppleague.model.Player;
@@ -92,7 +89,7 @@ public class MatchService {
 
         match = matchRepository.save(match);
 
-        return CreateMatchResponse.builder().id(match.getId()).playerA(playerA).playerB(playerB).build();
+        return CreateMatchResponse.builder().id(match.getId()).playerA(PlayerResponse.from(playerA)).playerB(PlayerResponse.from(playerB)).build();
     }
 
     @Transactional

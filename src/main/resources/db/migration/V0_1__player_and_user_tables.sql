@@ -1,4 +1,4 @@
-create TABLE IF NOT EXISTS users
+create TABLE IF NOT EXISTS user
 (
   ID       serial PRIMARY KEY,
   username VARCHAR(120)            NOT NULL UNIQUE,
@@ -10,7 +10,7 @@ create TABLE IF NOT EXISTS users
 create TABLE IF NOT EXISTS player
 (
   ID         serial PRIMARY KEY,
-  user_id    integer references users (ID),
+  user_id    integer references user (ID),
   rating     double,
   deviation  double,
   volatility double,

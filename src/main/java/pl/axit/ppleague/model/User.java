@@ -2,15 +2,15 @@ package pl.axit.ppleague.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
+import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
 @NoArgsConstructor
 @Getter
 @Setter
@@ -24,7 +24,7 @@ public class User {
     private Long id;
 
     @Column(name = "username")
-    private String name;
+    private String username;
 
     @Column(name = "email")
     @Email
@@ -40,4 +40,8 @@ public class User {
     @OneToOne(mappedBy = "user")
     @JsonBackReference
     private Player player;
+
+    @OneToMany(mappedBy = "notifier")
+    @JsonBackReference
+    private List<Notification> notifications;
 }

@@ -24,7 +24,7 @@ public class PlayerController {
         List<Player> players = playerRepository.findAll();
         List<PlayerResponse> responses = new ArrayList<>();
 
-        players.forEach(player -> responses.add(PlayerResponse.builder().playerId(player.getId()).rating(player.getRating()).name(player.getUser().getName()).build()));
+        players.forEach(player -> responses.add(PlayerResponse.builder().playerId(player.getId()).rating(player.getRating()).name(player.getUser().getUsername()).build()));
 
         return ResponseEntity.ok(responses);
     }

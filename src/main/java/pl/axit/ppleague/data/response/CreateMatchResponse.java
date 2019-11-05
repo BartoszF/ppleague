@@ -1,7 +1,6 @@
 package pl.axit.ppleague.data.response;
 
 import lombok.*;
-import pl.axit.ppleague.model.Player;
 
 @Getter
 @Setter
@@ -10,6 +9,6 @@ import pl.axit.ppleague.model.Player;
 @NoArgsConstructor
 public class CreateMatchResponse {
     private Long id;
-    private Player playerA;
-    private Player playerB;
+    private PlayerResponse playerA;
+    private PlayerResponse playerB;
 }
