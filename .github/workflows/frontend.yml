@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    paths:
+      - src/web
 
 jobs:
   build:
@@ -23,13 +25,14 @@ jobs:
       uses: actions/heroku@1.0.0
       with:
         args: "plugins:install heroku-builds"
+    - name: Make tarball
+      run: tar -czvf jar.tar.gz src/web/
     - name: Deploy jar to heroku
       uses: actions/heroku@1.0.0
-      working-directory: ./src/web
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
       with:
-        args: "builds:create -a pp-league"
+        args: "builds:create --source-tar jar.tar.gz -a pp-league"
         secrets: ${{ secrets.HEROKU_API_TOKEN }}
       
       
