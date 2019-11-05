@@ -1,0 +1,31 @@
+name: Frontend
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    
+    - uses: actions/setup-node@v1.1.0
+      with:
+        node-version: '12.x'
+    - env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
+    - name: Change dir
+      run: cd src/web
+    - name: Init git
+      run: git init && git add -A && git commit -m "Push"
+    - name: Push web to heroku
+      uses: actions/heroku@1.0.0
+      with:
+        args: "container:push -a pp-league"
+      
+      
+    
