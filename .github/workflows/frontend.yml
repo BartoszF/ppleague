@@ -19,6 +19,10 @@ jobs:
       with:
         args: "container:login"
         secrets: ${{ secrets.HEROKU_API_TOKEN }}
+    - name: Install build plugin
+      uses: actions/heroku@1.0.0
+      with:
+        args: "plugins:install heroku-builds"
     - name: Change dir
       run: cd src/web
     - name: Deploy jar to heroku
