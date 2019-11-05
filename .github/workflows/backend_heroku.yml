@@ -25,10 +25,7 @@ jobs:
       with:
         args: "container:login"
         secrets: ${{ secrets.HEROKU_API_TOKEN }}
-    - name: Deploy jar to heroku
-      uses: actions/heroku@1.0.0
+    - name: Deploy to heroku
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
-      with:
-        args: "push -a ppleague-backend"
-        secrets: ${{ secrets.HEROKU_API_TOKEN }}
+      run: git push https://heroku:${{ secrets.HEROKU_API_TOKEN }}@git.heroku.com/ppleague-backend.git
