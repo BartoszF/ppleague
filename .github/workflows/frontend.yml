@@ -23,10 +23,9 @@ jobs:
       uses: actions/heroku@1.0.0
       with:
         args: "plugins:install heroku-builds"
-    - name: Change dir
-      run: cd src/web
     - name: Deploy jar to heroku
       uses: actions/heroku@1.0.0
+      working-directory: ./src/web
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
       with:
