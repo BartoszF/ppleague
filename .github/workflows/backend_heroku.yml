@@ -18,13 +18,6 @@ jobs:
         java-version: 1.11
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-    - name: Login to heroku
-      uses: actions/heroku@1.0.0
-      env:
-        HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
-      with:
-        args: "container:login"
-        secrets: ${{ secrets.HEROKU_API_TOKEN }}
     - name: Deploy to heroku
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_TOKEN }}
