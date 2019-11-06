@@ -4,8 +4,8 @@ import "./matchButton.css";
 import {inject, observer} from "mobx-react";
 import MatchService from "../../services/MatchService";
 import PlayerService from "../../services/PlayerService";
-import MatchScoreModal from "../common/matchScoreModal";
 import {InputNumber} from "antd";
+import _ from "lodash";
 
 @inject("playerStore")
 @inject("matchStore")
@@ -69,12 +69,13 @@ class MatchButton extends React.Component {
 
     getNames()
     {
-        return (
-            <div className="names">
-                <span>{this.props.matchStore.ongoingMatch.playerA.user.username}</span>
-                <span>{this.props.matchStore.ongoingMatch.playerB.user.username}</span>
-            </div>
-        )
+        if (_.has(this.props.matchStore.ongoingMatch.playerA))
+            return (
+                <div className="names">
+                    <span>{this.props.matchStore.ongoingMatch.playerA.user.username}</span>
+                    <span>{this.props.matchStore.ongoingMatch.playerB.user.username}</span>
+                </div>
+            )
     }
 
     getInputs() {
