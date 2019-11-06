@@ -82,4 +82,4 @@ task copyWebApp(type: Copy) {
 
 appNpmBuild.dependsOn appNpmInstall
 copyWebApp.dependsOn appNpmBuild
-build.dependsOn copyWebApp
+bootJar.dependsOn copyWebApp
