@@ -1,18 +1,17 @@
-import React from "react";
+import React, {Component} from "react";
 import "./App.css";
-import { Provider, observer } from "mobx-react";
-import { Route, Router, Switch } from "react-router-dom";
+import {observer, Provider} from "mobx-react";
+import {Route, Router, Switch} from "react-router-dom";
 import playerStore from "./stores/playerStore";
 import userStore from "./stores/userStore";
 import matchStore from "./stores/matchStore";
 import LadderPage from "./pages/ladderPage/ladderPage";
-import { Layout, notification } from "antd";
+import {Layout, notification} from "antd";
 import PrivateRoute from "./components/common/PrivateRoute";
 import LoginPage from "./pages/loginPage/LoginPage";
-import { Component } from "react";
 import SignupPage from "./pages/signupPage/Signup";
 import UserService from "./services/UserService";
-import { ACCESS_TOKEN, APP_NAME } from "./constants";
+import {ACCESS_TOKEN, APP_NAME} from "./constants";
 
 import history from "./history";
 import AppHeader from "./components/common/AppHeader";
@@ -128,7 +127,7 @@ class App extends Component {
     return (
       <Layout className="layout">
         <Provider {...stores}>
-          <Router history={history}>
+          <Router basename={"/web"} history={history}>
             <AppHeader onLogout={this.handleLogout} />
             <Content className="app-content">
               <div className="container">

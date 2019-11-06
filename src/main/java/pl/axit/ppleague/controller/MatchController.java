@@ -20,7 +20,7 @@ import pl.axit.ppleague.service.MatchService;
 import javax.persistence.EntityNotFoundException;
 
 @RestController
-@RequestMapping("/match")
+@RequestMapping("/api/match")
 public class MatchController {
     @Autowired
     private MatchService matchService;

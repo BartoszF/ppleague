@@ -15,7 +15,7 @@ import pl.axit.ppleague.service.NotificationService;
 import pl.axit.ppleague.service.UserService;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
     @Autowired
     private UserService userService;
