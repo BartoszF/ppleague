@@ -4,8 +4,9 @@ import "./matchButton.css";
 import {inject, observer} from "mobx-react";
 import MatchService from "../../services/MatchService";
 import PlayerService from "../../services/PlayerService";
-import {InputNumber} from "antd";
+import {InputNumber, notification} from "antd";
 import _ from "lodash";
+import {APP_NAME} from "../../constants";
 
 @inject("playerStore")
 @inject("matchStore")
@@ -50,11 +51,19 @@ class MatchButton extends React.Component {
         match.playerAId = this.props.playerStore.userPlayer.playerId;
         match.playerBId = this.props.playerStore.selectedPlayer.playerId;
 
-        MatchService.createMatch(match)
-            .then(response => {
-                this.props.matchStore.ongoingMatch = response;
+        MatchService.createInvitation(match)
+            .then(() => {
+                //this.props.matchStore.ongoingMatch = response;
+                notification.success({
+                    message: APP_NAME,
+                    description: "Invitation sent."
+                });
             })
             .catch(err => {
+                notification.error({
+                    message: APP_NAME,
+                    description: err.debugMessage
+                });
                 console.log(err);
             });
     }
@@ -69,7 +78,7 @@ class MatchButton extends React.Component {
 
     getNames()
     {
-        if (_.has(this.props.matchStore.ongoingMatch.playerA))
+        if (this.props.matchStore.ongoingMatch && _.has(this.props.matchStore.ongoingMatch,'playerA'))
             return (
                 <div className="names">
                     <span>{this.props.matchStore.ongoingMatch.playerA.user.username}</span>

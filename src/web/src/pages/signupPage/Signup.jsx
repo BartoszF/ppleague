@@ -157,7 +157,7 @@ class SignupPage extends Component {
 
       const firstParts = email.split("@")[0].split(".").length;
 
-      if (firstParts != 2) {
+      if (firstParts !== 2) {
           return {
               validateStatus: "error",
               errorMsg: "Email is not in 'name.surname@siemens-logistics.com' form"

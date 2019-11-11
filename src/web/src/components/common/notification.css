@@ -1,0 +1,12 @@
+
+.notification-element {
+    min-width:200px;
+}
+
+.notification-element .controls {
+    margin-top: 5px;
+}
+
+.notification-element .controls button {
+    margin-right: 5px;
+}

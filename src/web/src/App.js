@@ -63,11 +63,7 @@ class App extends Component {
                     console.log(err);
                 });
 
-                UserService.getNotifications().then((response) => {
-                    console.log(response);
-                }).catch(err => {
-                    console.log(response);
-                })
+                userStore.getNotifications();
 
                 this.setState({
                     isLoading: false
