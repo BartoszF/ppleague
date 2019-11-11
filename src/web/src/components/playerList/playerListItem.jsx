@@ -3,13 +3,15 @@ import { Icon } from 'antd';
 import {observer, inject} from "mobx-react";
 import "./PlayerListItem.css";
 
+import _ from 'lodash';
+
 @inject('userStore')
 @inject('matchStore')
 @observer
 class PlayerListItem extends React.Component {
 
     isOngoing(playerId) {
-        return this.props.matchStore.ongoingMatch != null && this.props.userStore.player.playerId != playerId &&(this.props.matchStore.ongoingMatch.playerA.id == playerId || this.props.matchStore.ongoingMatch.playerB.id == playerId)
+        return !_.isEmpty(this.props.matchStore.ongoingMatch) && this.props.userStore.player.playerId != playerId &&(this.props.matchStore.ongoingMatch.playerA.id == playerId || this.props.matchStore.ongoingMatch.playerB.id == playerId)
     }
 
     render() {

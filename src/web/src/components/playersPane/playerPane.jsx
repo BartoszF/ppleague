@@ -24,7 +24,7 @@ class PlayerPane extends React.Component {
         </div>
         <div className={"playerRating"}>
           <h2>Rating</h2>
-          <h2>{this.props.player.rating}</h2>
+          <h2>{parseFloat(this.props.player.rating).toFixed(2)}</h2>
         </div>
 
         {this.matchButton()}
