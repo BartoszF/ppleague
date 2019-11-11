@@ -8,11 +8,18 @@ const MatchService = {
         });
     },
 
-    createMatch: function(match) {
+    createInvitation: function(match) {
         return request({
             url: "/match",
             method: 'POST',
             body: JSON.stringify(match)
+        })
+    },
+
+    acceptInvitation: function(notificationId) {
+        return request({
+            url: "/match/accept/"+notificationId,
+            method: 'GET'
         })
     },
 

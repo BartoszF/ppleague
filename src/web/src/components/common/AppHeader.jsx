@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import {Link, withRouter} from 'react-router-dom';
 import './AppHeader.css';
-import {Dropdown, Icon, Layout, Menu} from 'antd';
+import {Dropdown, Icon, Layout, Menu, Badge} from 'antd';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react';
+import { observable } from 'mobx';
+import Notification from './notification';
 
 const Header = Layout.Header;
 
@@ -12,9 +14,11 @@ class AppHeader extends Component {
     constructor(props) {
         super(props);
         this.handleMenuClick = this.handleMenuClick.bind(this);
+        this.userStore = this.props.userStore;
     }
 
     handleMenuClick({key}) {
+        console.log(key);
         if (key === "logout") {
             this.props.onLogout();
         }
@@ -28,6 +32,11 @@ class AppHeader extends Component {
                     <Link to="/">
                         <Icon type="home" className="nav-icon"/>
                     </Link>
+                </Menu.Item>,
+                <Menu.Item key="/notifications" className="notifications-menu">
+                    <NotificationsDropdown
+                        handleMenuClick={this.handleMenuClick}
+                        userStore={observable(this.props.userStore)}/>
                 </Menu.Item>,
                 <Menu.Item key="/profile" className="profile-menu">
                     <ProfileDropdownMenu
@@ -64,6 +73,40 @@ class AppHeader extends Component {
             </Header>
         );
     }
+}
+
+function getNotification(notification) {
+
+    return (<div key={"not_"+notification.id} className="dropdown-item">
+                <Notification notification={notification} />
+            </div>);
+
+}
+
+function NotificationsDropdown(props) {
+    const dropdownMenu = (
+        <Menu theme="light" className="notifications-dropdown-menu">
+
+            {props.userStore.notifications.map(notification => {
+                return getNotification(notification);
+            })}
+
+        </Menu>
+    );
+
+    return (
+            <Dropdown
+                overlay={dropdownMenu}
+                placement="bottomCenter"
+                trigger={['click']}
+                getPopupContainer={() => document.getElementsByClassName('notifications-menu')[0]}>
+                <div href="#" className="ant-dropdown-link">
+                    <Badge title="Notifications" count={props.userStore.notifications.length} overflowCount={10}>
+                        <Icon type="alert" className="nav-icon"/>
+                    </Badge>
+                </div>
+            </Dropdown>
+        );
 }
 
 function ProfileDropdownMenu(props) {

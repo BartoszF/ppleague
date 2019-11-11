@@ -4,8 +4,6 @@ import PlayerList from "../../components/playerList/playerList";
 import PlayerService from "../../services/PlayerService";
 import {Col} from "antd";
 
-import _ from 'lodash';
-
 import './ladderPage.css';
 import PlayerPane from "../../components/playersPane/playerPane";
 

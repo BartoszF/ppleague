@@ -1,5 +1,7 @@
 import {observable, action} from "mobx";
 
+import MatchService from "../services/MatchService";
+
 class MatchStore {
     @observable selectedPlayerMatches = [];
     @observable userPlayerMatches = [];
@@ -17,6 +19,19 @@ class MatchStore {
 
     @action setOngoingMatch(response) {
         this.ongoingMatch = response;
+    }
+
+    @action
+    getOngoingMatch() {
+        MatchService.getOngoinMatch().then(
+
+            action('getOngoingMatch', match => {
+                this.setOngoingMatch(match);
+            }),
+            action('error', err => {
+                console.log(err);
+            })
+         );
     }
 }
 
