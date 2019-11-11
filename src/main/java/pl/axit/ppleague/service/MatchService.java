@@ -10,6 +10,7 @@ import pl.axit.ppleague.data.request.EndMatchRequest;
 import pl.axit.ppleague.data.response.*;
 import pl.axit.ppleague.exception.MatchExistsException;
 import pl.axit.ppleague.model.Match;
+import pl.axit.ppleague.model.Notification;
 import pl.axit.ppleague.model.Player;
 import pl.axit.ppleague.repository.MatchRepository;
 import pl.axit.ppleague.repository.PlayerRepository;
@@ -21,6 +22,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MatchService {
@@ -38,6 +40,9 @@ public class MatchService {
     private RatingCalculator ratingCalculator;
 
     @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
     private RatingPeriodResults results;
 
     public GetMatchesResponse getMatches() {
@@ -49,7 +54,12 @@ public class MatchService {
     }
 
     public MatchResponse getOngoingMatchForPlayer(Player player) {
-        return MatchResponse.from(matchRepository.findOngoingMatchForPlayer(player).get());
+        Optional<Match> match = matchRepository.findOngoingMatchForPlayer(player);
+
+        if (match.isPresent())
+            return MatchResponse.from(match.get());
+
+        return null;
     }
 
     public GetMatchesResponse getMatchesByPlayer(Player player) {
@@ -64,6 +74,22 @@ public class MatchService {
 
     public MatchResponse getMatch(Long id) {
         return MatchResponse.from(matchRepository.getOne(id));
+    }
+
+    @Transactional
+    public CreateMatchResponse createMatchFromInvitation(Long invitationId, UserPrincipal userPrincipal) throws MatchExistsException {
+        CreateMatchRequest request = new CreateMatchRequest();
+
+        Notification invitation = notificationService.find(invitationId).orElseThrow();
+
+        request.setPlayerAId(invitation.getActor().getId());
+        request.setPlayerBId(invitation.getNotifier().getId());
+
+        CreateMatchResponse response = createMatch(request, userPrincipal);
+
+        notificationService.delete(invitation);
+
+        return response;
     }
 
     @Transactional
