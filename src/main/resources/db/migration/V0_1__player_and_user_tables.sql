@@ -11,7 +11,7 @@ create TABLE IF NOT EXISTS player
 (
   ID         serial PRIMARY KEY,
   user_id    integer references users (ID),
-  rating     double,
-  deviation  double,
-  volatility double
+  rating     double precision,
+  deviation  double precision,
+  volatility double precision
 );
