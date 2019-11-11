@@ -56,12 +56,7 @@ class App extends Component {
                 console.log(userStore.getUserString());
                 console.log(userStore.isAuthenticated);
 
-                MatchService.getOngoinMatch().then((response) => {
-                    matchStore.setOngoingMatch(response);
-                    console.log(response);
-                }).catch(err => {
-                    console.log(err);
-                });
+                matchStore.getOngoingMatch();
 
                 userStore.getNotifications();
 
