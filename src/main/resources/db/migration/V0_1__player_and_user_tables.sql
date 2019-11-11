@@ -13,5 +13,5 @@ create TABLE IF NOT EXISTS player
   user_id    integer references users (ID),
   rating     double,
   deviation  double,
-  volatility double,
+  volatility double
 );
