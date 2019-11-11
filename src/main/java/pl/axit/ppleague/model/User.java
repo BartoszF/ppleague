@@ -10,7 +10,7 @@ import javax.validation.constraints.Email;
 import java.util.List;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @NoArgsConstructor
 @Getter
 @Setter
