@@ -40,6 +40,10 @@
     margin-right:10px;
 }
 
+.matchButton .inputs input {
+    text-align: center;
+}
+
 .matchButton .names {
         position: absolute;
         width: 100%;
