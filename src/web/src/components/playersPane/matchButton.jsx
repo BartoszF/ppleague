@@ -78,7 +78,7 @@ class MatchButton extends React.Component {
 
     getNames()
     {
-        if (this.props.matchStore.ongoingMatch && _.has(this.props.matchStore.ongoingMatch,'playerA'))
+        if (this.samePlayerAsMatch(this.props.playerStore.selectedPlayer.playerId) && this.props.matchStore.ongoingMatch && _.has(this.props.matchStore.ongoingMatch, 'playerA'))
             return (
                 <div className="names">
                     <span>{this.props.matchStore.ongoingMatch.playerA.user.username}</span>
