@@ -40,3 +40,7 @@
 .playerListItem .icons i {
     font-size:25px;
 }
+
+.playerListItem.ongoing {
+    background-color: rgba(255, 204, 40, 0.6);
+}
