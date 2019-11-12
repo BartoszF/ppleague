@@ -150,4 +150,33 @@ public class MatchService {
 
         return EndMatchResponse.builder().id(match.getId()).build();
     }
+
+    public PlayerMatchesResponse getMatches(Long playerId) {
+        Player player = playerRepository.getOne(playerId);
+
+        List<Match> matches = matchRepository.findMatchByPlayerAOrPlayerB(player, player);
+
+        PlayerMatchesResponse matchesResponses = new PlayerMatchesResponse();
+
+        matches.stream().forEach((match) -> {
+            if (match.getPlayerAScore().equals(0) && match.getPlayerBScore().equals(0)) return;
+
+            matchesResponses.setMatches(matchesResponses.getMatches() + 1);
+            if (match.getPlayerAScore() > match.getPlayerBScore()) {
+                if (match.getPlayerA().equals(player)) {
+                    matchesResponses.setWon(matchesResponses.getWon() + 1);
+                } else {
+                    matchesResponses.setLost(matchesResponses.getLost() + 1);
+                }
+            } else if (match.getPlayerAScore() < match.getPlayerBScore()) {
+                if (match.getPlayerA().equals(player)) {
+                    matchesResponses.setLost(matchesResponses.getLost() + 1);
+                } else {
+                    matchesResponses.setWon(matchesResponses.getWon() + 1);
+                }
+            }
+        });
+
+        return matchesResponses;
+    }
 }

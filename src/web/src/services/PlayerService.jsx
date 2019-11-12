@@ -1,4 +1,4 @@
-import { request } from '../APIUtils';
+import {request} from '../APIUtils';
 
 const PlayerService = {
     getPlayers: function() {
@@ -6,7 +6,14 @@ const PlayerService = {
             url: "/players",
             method: 'GET'
         });
-    }
+    },
+
+    getMatches: function (playerId) {
+        return request({
+            url: "/players/" + playerId + "/matches",
+            method: 'GET'
+        });
+    },
 
 }
 
