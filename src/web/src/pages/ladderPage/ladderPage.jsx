@@ -7,7 +7,7 @@ import {Col} from "antd";
 import './ladderPage.css';
 import PlayerPane from "../../components/playersPane/playerPane";
 
-@inject('playerStore') @inject('userStore') @observer
+@inject('playerStore') @inject('matchStore') @inject('userStore') @observer
 class LadderPage extends React.Component {
 
     componentDidMount() {

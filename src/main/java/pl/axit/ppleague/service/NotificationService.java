@@ -11,7 +11,10 @@ import pl.axit.ppleague.model.User;
 import pl.axit.ppleague.repository.NotificationRepository;
 
 import javax.persistence.EntityExistsException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -45,6 +48,7 @@ public class NotificationService {
                         .eventType(eventType.getId())
                         .eventId(eventId)
                         .notifier(notifier)
+                        .date(new Timestamp(new Date().getTime()))
                         .build();
 
         NotificationResponse response = NotificationResponse.from(notification);
@@ -56,7 +60,7 @@ public class NotificationService {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
-            wsNotificationService.notify(mapper.writeValueAsString(response), notifierUsername);
+            wsNotificationService.notify(mapper.writeValueAsString(Map.of("notification", response)), notifierUsername);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

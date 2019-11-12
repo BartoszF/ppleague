@@ -15,6 +15,6 @@ public class UserResponse {
     PlayerResponse player;
 
     public static UserResponse from(User user) {
-        return UserResponse.builder().id(user.getId()).email(user.getEmail()).email(user.getEmail()).player(PlayerResponse.from(user.getPlayer())).build();
+        return UserResponse.builder().id(user.getId()).email(user.getEmail()).name(user.getUsername()).email(user.getEmail()).player(PlayerResponse.from(user.getPlayer())).build();
     }
 }

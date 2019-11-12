@@ -36,7 +36,8 @@ class AppHeader extends Component {
                 <Menu.Item key="/notifications" className="notifications-menu">
                     <NotificationsDropdown
                         handleMenuClick={this.handleMenuClick}
-                        userStore={observable(this.props.userStore)}/>
+                        userStore={this.props.userStore}
+                        count={this.props.userStore.notifications.length}/>
                 </Menu.Item>,
                 <Menu.Item key="/profile" className="profile-menu">
                     <ProfileDropdownMenu
@@ -101,7 +102,7 @@ function NotificationsDropdown(props) {
                 trigger={['click']}
                 getPopupContainer={() => document.getElementsByClassName('notifications-menu')[0]}>
                 <div href="#" className="ant-dropdown-link">
-                    <Badge title="Notifications" count={props.userStore.notifications.length} overflowCount={10}>
+                    <Badge title="Notifications" count={props.count} overflowCount={10}>
                         <Icon type="alert" className="nav-icon"/>
                     </Badge>
                 </div>

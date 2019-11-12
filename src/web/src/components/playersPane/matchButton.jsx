@@ -33,7 +33,6 @@ class MatchButton extends React.Component {
             console.log(this.state);
             MatchService.endMatch(this.state.aScore, this.state.bScore, this.props.matchStore.ongoingMatch.id)
                 .then(response => {
-                    console.log(response);
                     this.props.matchStore.ongoingMatch = null;
                     this.setState({aScore: 0, bScore: 0})
                     PlayerService.getPlayers().then((response) => {

@@ -20,8 +20,7 @@ public class WsNotificationService {
 
     public void notify(String message, String userName) {
         String sessionId = getUserCache().get(userName);
-        simpMessagingTemplate.convertAndSendToUser(userName, "/queue/notify", message, createHeaders(sessionId));
-        logger.info("Sending ws to " + userName + " session " + sessionId);
+        simpMessagingTemplate.convertAndSendToUser(sessionId, "/topic/notify", message, createHeaders(sessionId));
     }
 
     private MessageHeaders createHeaders(String sessionId) {

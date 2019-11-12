@@ -1,9 +1,10 @@
 package pl.axit.ppleague.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.goochjs.glicko2.Rating;
 import org.goochjs.glicko2.RatingCalculator;
 
@@ -34,7 +35,7 @@ public class Player {
         volatility =  RatingCalculator.DEFAULT_VOLATILITY;
     }
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonManagedReference
     private User user;

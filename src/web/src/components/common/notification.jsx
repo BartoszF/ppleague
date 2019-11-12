@@ -70,10 +70,10 @@ class Notification extends React.Component {
     render() {
         return (<div key={this.props.notification.id} className="notification-element">
                    <div className="title">
-                       {this.props.notification.eventType}
+                       <h4>{this.props.notification.title}</h4>
                    </div>
                    <div className="message">
-                       {this.props.notification.actor.username}
+                       {this.props.notification.message}
                    </div>
                    <div className="controls">
                        <Button onClick={this.acceptNotification} loading={this.state.acceptLoading} type="primary" size={"small"}>
