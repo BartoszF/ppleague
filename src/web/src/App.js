@@ -12,11 +12,11 @@ import LoginPage from "./pages/loginPage/LoginPage";
 import SignupPage from "./pages/signupPage/Signup";
 import UserService from "./services/UserService";
 import {ACCESS_TOKEN, APP_NAME} from "./constants";
+import SockJsClient from 'react-stomp';
 
 import history from "./history";
 import AppHeader from "./components/common/AppHeader";
 import LoadingIndicator from "./components/common/LoadingIndicator";
-import MatchService from "./services/MatchService";
 
 const {Content} = Layout;
 
@@ -111,35 +111,55 @@ class App extends Component {
         this.loadCurrentUser();
     }
 
-    render() {
+    getSwitch(props) {
         if (this.state.isLoading) {
             return <LoadingIndicator/>;
+        } else {
+            return (
+                <Switch>
+                    <PrivateRoute
+                        exact
+                        path="/"
+                        {...stores}
+                        component={LadderPage}
+                        handleLogout={this.handleLogout}
+                    ></PrivateRoute>
+                    <Route
+                        exact
+                        path="/login"
+                        render={props => (
+                            <LoginPage onLogin={this.handleLogin} {...props} />
+                        )}
+                    ></Route>
+                    <Route exact path="/signup" component={SignupPage}/>
+                    <Route render={props => (<div>NotFound</div>)}/>
+                </Switch>);
         }
+    }
+
+    render() {
         return (
             <Layout className="layout">
                 <Provider {...stores}>
+                    <SockJsClient
+                        url={"http://localhost:8081/ws"}
+                        topics={["/user/queue/notify"]}
+                        debug={true}
+                        onMessage={(msg) => {
+                            console.log(msg)
+                        }}
+                        onConnect={() => {
+                            console.log("ws connected")
+                            this.clientRef.sendMessage("/app/register", JSON.stringify({username: userStore.username}));
+                        }}
+                        ref={(client) => {
+                            this.clientRef = client
+                        }}/>
                     <Router basename={"/web"} history={history}>
                         <AppHeader onLogout={this.handleLogout}/>
                         <Content className="app-content">
                             <div className="container">
-                                <Switch>
-                                    <PrivateRoute
-                                        exact
-                                        path="/"
-                                        {...stores}
-                                        component={LadderPage}
-                                        handleLogout={this.handleLogout}
-                                    ></PrivateRoute>
-                                    <Route
-                                        exact
-                                        path="/login"
-                                        render={props => (
-                                            <LoginPage onLogin={this.handleLogin} {...props} />
-                                        )}
-                                    ></Route>
-                                    <Route exact path="/signup" component={SignupPage}/>
-                                    <Route render={props => (<div>NotFound</div>)}/>
-                                </Switch>
+                                {this.getSwitch()}
                             </div>
                         </Content>
                     </Router>
