@@ -1,6 +1,7 @@
 package pl.axit.ppleague.data.response;
 
 import lombok.*;
+import pl.axit.ppleague.model.User;
 
 @Getter
 @Setter
@@ -12,4 +13,8 @@ public class UserResponse {
     String email;
     String name;
     PlayerResponse player;
+
+    public static UserResponse from(User user) {
+        return UserResponse.builder().id(user.getId()).email(user.getEmail()).name(user.getUsername()).email(user.getEmail()).player(PlayerResponse.from(user.getPlayer())).build();
+    }
 }

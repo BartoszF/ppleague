@@ -24,6 +24,20 @@ class UserStore {
         this.notifications = notifications.notifications;
     }
 
+    @action
+    addNotification(notification) {
+        switch(notification.eventType)
+        {
+            case "MATCH_INV":
+                notification.title = "New match invitation!";
+                notification.message = notification.actor.name + " invited you for a match";
+        }
+
+        this.notifications.push(notification);
+
+        return notification;
+    }
+
     @action removeNotification(notification) {
         this.notifications = this.notifications.filter(item => item !== notification)
     }
@@ -32,7 +46,10 @@ class UserStore {
     getNotifications() {
         UserService.getNotifications().then(
             action('setNotifications', notifications => {
-                this.setNotifications(notifications);
+                notifications.notifications.forEach((value,index) => {
+                    this.addNotification(value);
+                });
+                //this.setNotifications(notifications);
             }),
             action('error', error => {
                 console.log(error);

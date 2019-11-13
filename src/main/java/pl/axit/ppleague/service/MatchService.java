@@ -1,5 +1,7 @@
 package pl.axit.ppleague.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.goochjs.glicko2.Rating;
 import org.goochjs.glicko2.RatingCalculator;
 import org.goochjs.glicko2.RatingPeriodResults;
@@ -19,10 +21,7 @@ import pl.axit.ppleague.security.UserPrincipal;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class MatchService {
@@ -44,6 +43,9 @@ public class MatchService {
 
     @Autowired
     private RatingPeriodResults results;
+
+    @Autowired
+    private WsNotificationService wsNotificationService;
 
     public GetMatchesResponse getMatches() {
         List<MatchResponse> matches = new ArrayList<>();
@@ -77,7 +79,7 @@ public class MatchService {
     }
 
     @Transactional
-    public CreateMatchResponse createMatchFromInvitation(Long invitationId, UserPrincipal userPrincipal) throws MatchExistsException {
+    public CreateMatchResponse createMatchFromInvitation(Long invitationId, UserPrincipal userPrincipal, Player player) throws MatchExistsException {
         CreateMatchRequest request = new CreateMatchRequest();
 
         Notification invitation = notificationService.find(invitationId).orElseThrow();
@@ -88,6 +90,15 @@ public class MatchService {
         CreateMatchResponse response = createMatch(request, userPrincipal);
 
         notificationService.delete(invitation);
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            wsNotificationService.notify(mapper.writeValueAsString(Map.of("ongoing_match", response)), invitation.getActor().getUsername());
+            wsNotificationService.notify(mapper.writeValueAsString(Map.of("ongoing_match", response)), invitation.getNotifier().getUsername());
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
 
         return response;
     }
@@ -148,7 +159,17 @@ public class MatchService {
 
         match = matchRepository.save(match);
 
-        return EndMatchResponse.builder().id(match.getId()).build();
+        EndMatchResponse response = EndMatchResponse.builder().id(match.getId()).build();
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            wsNotificationService.notify(mapper.writeValueAsString(Map.of("end_match", response)), playerA.getUser().getUsername());
+            wsNotificationService.notify(mapper.writeValueAsString(Map.of("end_match", response)), playerB.getUser().getUsername());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return response;
     }
 
     public PlayerMatchesResponse getMatches(Long playerId) {

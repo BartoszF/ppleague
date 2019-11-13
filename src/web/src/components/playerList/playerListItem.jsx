@@ -1,6 +1,7 @@
 import * as React from "react";
 import {Icon} from 'antd';
 import {inject, observer} from "mobx-react";
+import {computed} from 'mobx';
 import "./PlayerListItem.css";
 
 import _ from 'lodash';
@@ -10,13 +11,13 @@ import _ from 'lodash';
 @observer
 class PlayerListItem extends React.Component {
 
-    isOngoing(playerId) {
-        return !_.isEmpty(this.props.matchStore.ongoingMatch) && this.props.userStore.player.playerId != playerId &&(this.props.matchStore.ongoingMatch.playerA.id == playerId || this.props.matchStore.ongoingMatch.playerB.id == playerId)
+    isOngoing(matchStore) {
+        return matchStore != null && matchStore.ongoingMatch != null && this.props.userStore.player.playerId != this.props.player.playerId &&(matchStore.ongoingMatch.playerA.id == this.props.player.playerId || matchStore.ongoingMatch.playerB.id == this.props.player.playerId)
     }
 
-    getIcons() {
+    getIcons(matchStore) {
         let icons = []
-        if (this.isOngoing(this.props.player.playerId))
+        if (this.isOngoing(matchStore))
             icons.push(<Icon height={'30px'} type="hourglass"/>);
         //<Icon type="clock-circle" />
 
@@ -26,9 +27,9 @@ class PlayerListItem extends React.Component {
     render() {
         return (
             <div key={this.props.player.playerId} onClick={(ev) => this.props.click(ev, this.props.player)}
-                 className={"playerListItem " + (this.isOngoing(this.props.player.playerId) ? "ongoing" : "")}>
+                 className={"playerListItem " + (this.isOngoing(this.props.matchStore) ? "ongoing" : "")}>
                 <span className={"rank"}><h2>{this.props.player.standing} </h2></span>
-                <span className={"icons"}>{this.getIcons()}</span>
+                <span className={"icons"}>{this.getIcons(this.props.matchStore)}</span>
                 <span className={"name"}><h2>{this.props.player.name}</h2></span>
             </div>)
     }

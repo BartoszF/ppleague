@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.axit.ppleague.data.EventType;
 import pl.axit.ppleague.data.request.CreateMatchRequest;
 import pl.axit.ppleague.data.request.EndMatchRequest;
+import pl.axit.ppleague.data.response.CreateMatchResponse;
 import pl.axit.ppleague.data.response.EndMatchResponse;
 import pl.axit.ppleague.data.response.GetMatchesResponse;
 import pl.axit.ppleague.data.response.MatchResponse;
@@ -48,15 +49,15 @@ public class MatchController {
         notificationService.create(EventType.MATCH_INV, null, actor, notifier);
 
         return "{}";
-        //return matchService.createMatch(request, currentUser);
     }
 
     @GetMapping("/accept/{id}")
-    public MatchResponse acceptMatchInvitation(@CurrentUser UserPrincipal userPrincipal, @PathVariable("id") Long notificationId) throws MatchExistsException {
-        matchService.createMatchFromInvitation(notificationId, userPrincipal);
-
+    public CreateMatchResponse acceptMatchInvitation(@CurrentUser UserPrincipal userPrincipal, @PathVariable("id") Long notificationId) throws MatchExistsException {
         Player player = userRepository.findById(userPrincipal.getId()).get().getPlayer();
-        return matchService.getOngoingMatchForPlayer(player);
+
+        CreateMatchResponse response = matchService.createMatchFromInvitation(notificationId, userPrincipal, player);
+
+        return response;
     }
 
     @PostMapping("/end")

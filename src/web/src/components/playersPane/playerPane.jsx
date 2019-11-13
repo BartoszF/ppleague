@@ -4,8 +4,9 @@ import _ from "lodash";
 import {Avatar} from "antd";
 
 import MatchButton from "./matchButton";
-import {observer} from "mobx-react";
+import {observer, inject} from "mobx-react";
 
+@inject('matchStore')
 @observer
 class PlayerPane extends React.Component {
 

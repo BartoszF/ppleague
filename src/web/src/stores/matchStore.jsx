@@ -1,12 +1,14 @@
-import {observable, action} from "mobx";
+import {observable, action, computed} from "mobx";
 
 import MatchService from "../services/MatchService";
+
+import _ from 'lodash';
 
 class MatchStore {
     @observable selectedPlayerMatches = [];
     @observable userPlayerMatches = [];
     @observable selectedPlayerLoading = false;
-    @observable ongoingMatch = {}
+    @observable ongoingMatch = null
 
     @action setSelectedPlayerMatches(matches) {
         this.selectedPlayerMatches = matches;
