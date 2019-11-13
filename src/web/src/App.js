@@ -23,7 +23,6 @@ import AppHeader from "./components/common/AppHeader";
 import LoadingIndicator from "./components/common/LoadingIndicator";
 
 
-
 const {Content} = Layout;
 
 const stores = {playerStore, userStore, matchStore};
@@ -174,7 +173,7 @@ class App extends Component {
             <Layout className="layout">
                 <Provider {...stores}>
                     <SockJsClient
-                        url={"http://localhost:8081/ws"}
+                        url={"/ws"}
                         topics={["/user/topic/notify"]}
                         debug={true}
                         onMessage={(msg) => {
