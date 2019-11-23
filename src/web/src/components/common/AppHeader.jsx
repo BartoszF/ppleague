@@ -30,16 +30,16 @@ class AppHeader extends Component {
             menuItems = [
                 <Menu.Item key="/">
                     <Link to="/">
-                        <Icon type="home" className="nav-icon"/>
+                        <Icon type="home" className="noselect nav-icon"/>
                     </Link>
                 </Menu.Item>,
-                <Menu.Item key="/notifications" className="notifications-menu">
+                <Menu.Item key="/notifications" className="noselect notifications-menu">
                     <NotificationsDropdown
                         handleMenuClick={this.handleMenuClick}
                         userStore={this.props.userStore}
                         count={this.props.userStore.notifications.length}/>
                 </Menu.Item>,
-                <Menu.Item key="/profile" className="profile-menu">
+                <Menu.Item key="/profile" className="noselect profile-menu">
                     <ProfileDropdownMenu
                         currentUser={this.props.userStore}
                         handleMenuClick={this.handleMenuClick}/>
@@ -48,10 +48,10 @@ class AppHeader extends Component {
         } else {
             menuItems = [
                 <Menu.Item key="/login">
-                    <Link to="/login">Login</Link>
+                    <Link className="noselect" to="/login">Login</Link>
                 </Menu.Item>,
                 <Menu.Item key="/signup">
-                    <Link to="/signup">Signup</Link>
+                    <Link className="noselect" to="/signup">Signup</Link>
                 </Menu.Item>
             ];
         }
@@ -60,7 +60,7 @@ class AppHeader extends Component {
             <Header className="app-header">
                 <div className="container">
                     <div className="app-title">
-                        <Link to="/">League</Link>
+                        <Link className="noselect" to="/">League</Link>
                     </div>
                     <Menu
                         className="app-menu"
@@ -90,7 +90,7 @@ function NotificationsDropdown(props) {
 
             {props.userStore.notifications.length > 0 ? props.userStore.notifications.map(notification => {
                 return getNotification(notification);
-            }) : <div className="noNotifications">Bag of notifications is empty <Icon type="smile" /></div>}
+            }) : <div className="noselect noNotifications">Bag of notifications is empty <Icon type="smile" /></div>}
 
         </Menu>
     );
