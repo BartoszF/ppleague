@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 public class NotificationResponse {
     private Long id;
     private UserResponse actor;
+    private UserResponse notifier;
     private EventType eventType;
     private Long eventId;
     private Timestamp date;
@@ -24,6 +25,7 @@ public class NotificationResponse {
                 NotificationResponse.builder()
                         .id(notification.getId())
                         .actor(UserResponse.from(notification.getActor()))
+                        .notifier(UserResponse.from(notification.getNotifier()))
                         .date(notification.getDate())
                         .eventType(notification.getEventType().orElseThrow())
                         .eventId(notification.getEventId())

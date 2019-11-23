@@ -10,6 +10,7 @@ import {APP_NAME} from "../../constants";
 
 @inject("playerStore")
 @inject("matchStore")
+@inject("userStore")
 @observer
 class MatchButton extends React.Component {
     constructor(props) {
@@ -34,6 +35,7 @@ class MatchButton extends React.Component {
             MatchService.endMatch(this.state.aScore, this.state.bScore, this.props.matchStore.ongoingMatch.id)
                 .then(response => {
                     this.props.matchStore.ongoingMatch = null;
+                    this.props.userStore.getMatchInvitations();
                     this.setState({aScore: 0, bScore: 0})
                     PlayerService.getPlayers().then((response) => {
                         this.props.playerStore.setPlayers(response);
@@ -53,6 +55,7 @@ class MatchButton extends React.Component {
         MatchService.createInvitation(match)
             .then(() => {
                 //this.props.matchStore.ongoingMatch = response;
+                this.props.userStore.getMatchInvitations();
                 notification.success({
                     message: APP_NAME,
                     description: "Invitation sent."

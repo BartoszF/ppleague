@@ -1,6 +1,7 @@
 import {observable, action} from "mobx";
 
 import UserService from "../services/UserService";
+import NotificationService from "../services/NotificationService";
 
 class UserStore {
     @observable username = ""
@@ -9,6 +10,7 @@ class UserStore {
     @observable player = {}
     @observable notifications = []
     @observable isAuthenticated = false
+    @observable matchInvitations = []
 
     @action setUser(user) {
 
@@ -50,6 +52,21 @@ class UserStore {
                     this.addNotification(value);
                 });
                 //this.setNotifications(notifications);
+            }),
+            action('error', error => {
+                console.log(error);
+            })
+         )
+    }
+
+    @action
+    getMatchInvitations() {
+        this.matchInvitations = [];
+        NotificationService.getInvitations().then(
+            action('setInvitations', invitations => {
+                invitations.notifications.forEach((value,index) => {
+                    this.matchInvitations.push(value);
+                });
             }),
             action('error', error => {
                 console.log(error);

@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.axit.ppleague.data.response.NotificationsResponse;
 import pl.axit.ppleague.security.CurrentUser;
 import pl.axit.ppleague.security.UserPrincipal;
 import pl.axit.ppleague.service.NotificationService;
@@ -21,6 +22,11 @@ public class NotificationController {
         notificationService.rejectNotification(notificationId, userPrincipal.getId());
 
         return "{}";
+    }
+
+    @GetMapping("/matchInvitation")
+    public NotificationsResponse getInvitationForPlayerMatch(@CurrentUser UserPrincipal userPrincipal) {
+        return NotificationsResponse.from(notificationService.getInvitationForPlayer(userPrincipal.getId()));
     }
 
 }

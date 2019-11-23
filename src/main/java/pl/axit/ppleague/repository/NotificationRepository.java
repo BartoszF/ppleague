@@ -15,6 +15,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     List<Notification> findByNotifierId(Long notifierId);
 
+    List<Notification> findByNotifierOrActorAndEventType(User actor, User notifier, Integer eventType);
+
     Optional<Notification> findByNotifierAndActorAndEventType(User notifier, User actor, Integer eventType);
 
 }

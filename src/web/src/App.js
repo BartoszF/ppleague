@@ -64,6 +64,8 @@ class App extends Component {
 
                 userStore.getNotifications();
 
+                userStore.getMatchInvitations();
+
                 this.setState({
                     isLoading: false
                 });
@@ -153,13 +155,16 @@ class App extends Component {
                 var notifObj = new Notification(notif.title);
                 setTimeout(notifObj.close.bind(notifObj), 4000);
             }
+            userStore.getMatchInvitations();
         }
 
         if(_.has(msg,'ongoing_match')){
+            userStore.getMatchInvitations();
             matchStore.getOngoingMatch();
         }
 
         if(_.has(msg,'end_match')){
+            userStore.getMatchInvitations();
             matchStore.setOngoingMatch(null);
             PlayerService.getPlayers().then((response) => {
                 playerStore.setPlayers(response);

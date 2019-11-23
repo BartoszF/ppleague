@@ -6,7 +6,13 @@ const NotificationService = {
             url: "/notification/"+notificationId+"/reject",
             method: 'GET'
         });
-    }
+    },
+    getInvitations: function() {
+        return request({
+            url: "/notification/matchInvitation",
+            method: 'GET'
+        });
+    },
 
 }
 

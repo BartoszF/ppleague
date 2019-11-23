@@ -9,6 +9,8 @@ import pl.axit.ppleague.data.response.NotificationResponse;
 import pl.axit.ppleague.model.Notification;
 import pl.axit.ppleague.model.User;
 import pl.axit.ppleague.repository.NotificationRepository;
+import pl.axit.ppleague.repository.PlayerRepository;
+import pl.axit.ppleague.repository.UserRepository;
 
 import javax.persistence.EntityExistsException;
 import java.sql.Timestamp;
@@ -25,6 +27,12 @@ public class NotificationService {
 
     @Autowired
     WsNotificationService wsNotificationService;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    PlayerRepository playerRepository;
 
     public Optional<Notification> find(Long notificationId) {
         return notificationRepository.findById(notificationId);
@@ -77,6 +85,12 @@ public class NotificationService {
         }
 
         throw new Exception("Notification don't belongs to user");
+    }
+
+    public List<Notification> getInvitationForPlayer(Long userId) {
+        User user = userRepository.getOne(userId);
+
+        return notificationRepository.findByNotifierOrActorAndEventType(user, user, EventType.MATCH_INV.getId());
     }
 
     public void delete(Notification notification) {
