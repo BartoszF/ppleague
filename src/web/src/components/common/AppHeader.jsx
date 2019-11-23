@@ -88,9 +88,9 @@ function NotificationsDropdown(props) {
     const dropdownMenu = (
         <Menu theme="light" className="notifications-dropdown-menu">
 
-            {props.userStore.notifications.map(notification => {
+            {props.userStore.notifications.length > 0 ? props.userStore.notifications.map(notification => {
                 return getNotification(notification);
-            })}
+            }) : <div className="noNotifications">Bag of notifications is empty <Icon type="smile" /></div>}
 
         </Menu>
     );
