@@ -93,8 +93,8 @@ public class MatchService {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            wsNotificationService.notify(mapper.writeValueAsString(Map.of("ongoing_match", response)), invitation.getActor().getUsername());
-            wsNotificationService.notify(mapper.writeValueAsString(Map.of("ongoing_match", response)), invitation.getNotifier().getUsername());
+            wsNotificationService.notify(mapper.writeValueAsString(Map.of("ongoing_match", "true")), invitation.getActor().getUsername());
+            wsNotificationService.notify(mapper.writeValueAsString(Map.of("ongoing_match", "true")), invitation.getNotifier().getUsername());
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -163,8 +163,8 @@ public class MatchService {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            wsNotificationService.notify(mapper.writeValueAsString(Map.of("end_match", response)), playerA.getUser().getUsername());
-            wsNotificationService.notify(mapper.writeValueAsString(Map.of("end_match", response)), playerB.getUser().getUsername());
+            wsNotificationService.notify(mapper.writeValueAsString(Map.of("end_match", "true")), playerA.getUser().getUsername());
+            wsNotificationService.notify(mapper.writeValueAsString(Map.of("end_match", "true")), playerB.getUser().getUsername());
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

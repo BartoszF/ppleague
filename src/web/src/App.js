@@ -156,8 +156,7 @@ class App extends Component {
         }
 
         if(_.has(msg,'ongoing_match')){
-            console.log("Setting ongoing match");
-            matchStore.setOngoingMatch(msg.ongoing_match);
+            matchStore.getOngoingMatch();
         }
 
         if(_.has(msg,'end_match')){
@@ -173,7 +172,7 @@ class App extends Component {
             <Layout className="layout">
                 <Provider {...stores}>
                     <SockJsClient
-                        url={"/ws"}
+                        url={"http://localhost:8081/ws"}
                         topics={["/user/topic/notify"]}
                         debug={true}
                         onMessage={(msg) => {
