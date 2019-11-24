@@ -59,7 +59,14 @@ const MatchService = {
             url: "/match/"+matchId+"/cancel",
             method: 'GET'
         })
-    }
+    },
+
+    pagedMatchHistory: function(playerId, page) {
+            return request({
+                url: "/match/pagedByPlayer?playerId="+playerId+"&page="+page,
+                method: 'GET'
+            })
+        }
 
 }
 

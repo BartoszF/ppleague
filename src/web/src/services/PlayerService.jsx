@@ -15,6 +15,13 @@ const PlayerService = {
         });
     },
 
+    getPlayerByUsername: function (username) {
+        return request({
+            url: "/players/byUsername?username="+username,
+            method: 'GET'
+        });
+    },
+
 }
 
 export default PlayerService;

@@ -6,6 +6,8 @@ import org.goochjs.glicko2.Rating;
 import org.goochjs.glicko2.RatingCalculator;
 import org.goochjs.glicko2.RatingPeriodResults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import pl.axit.ppleague.data.request.CreateMatchRequest;
 import pl.axit.ppleague.data.request.EndMatchRequest;
@@ -15,6 +17,7 @@ import pl.axit.ppleague.model.Match;
 import pl.axit.ppleague.model.Notification;
 import pl.axit.ppleague.model.Player;
 import pl.axit.ppleague.repository.MatchRepository;
+import pl.axit.ppleague.repository.PagedMatchRepository;
 import pl.axit.ppleague.repository.PlayerRepository;
 import pl.axit.ppleague.repository.UserRepository;
 import pl.axit.ppleague.security.UserPrincipal;
@@ -28,6 +31,9 @@ public class MatchService {
 
     @Autowired
     private MatchRepository matchRepository;
+
+    @Autowired
+    private PagedMatchRepository pagedMatchRepository;
 
     @Autowired
     private PlayerRepository playerRepository;
@@ -72,6 +78,16 @@ public class MatchService {
         matches.forEach(match -> matchResponses.add(MatchResponse.from(match)));
 
         return new GetMatchesResponse(matchResponses);
+    }
+
+    public GetPagedMatchesResponse getPagedMatchesByPlayer(Player player, Integer page) {
+        List<MatchResponse> matchResponses = new ArrayList<>();
+
+        Page<Match> matches = pagedMatchRepository.getAllByPlayerAOrPlayerB(player, player, PageRequest.of(page, 20));
+
+        matches.forEach(match -> matchResponses.add(MatchResponse.from(match)));
+
+        return new GetPagedMatchesResponse(matchResponses, matches.hasNext());
     }
 
     public MatchResponse getMatch(Long id) {

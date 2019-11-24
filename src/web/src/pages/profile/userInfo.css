@@ -1,0 +1,16 @@
+.userInfo .matches .match {
+    height: 42px;
+    font-size: 23px;
+    justify-content: space-between;
+    display: flex;
+    padding-left: 20%;
+    padding-right: 20%;
+}
+
+.match.win {
+    background-color: rgba(130, 249, 0, 0.60);
+}
+
+.match.lose {
+    background-color: rgba(255, 33, 33, 0.47);
+}

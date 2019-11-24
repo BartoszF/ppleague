@@ -12,6 +12,7 @@ import {Layout, notification} from "antd";
 import PrivateRoute from "./components/common/PrivateRoute";
 import LoginPage from "./pages/loginPage/LoginPage";
 import SignupPage from "./pages/signupPage/Signup";
+import ProfilePage from "./pages/profile/profilePage";
 import UserService from "./services/UserService";
 import PlayerService from "./services/PlayerService";
 import {ACCESS_TOKEN, APP_NAME} from "./constants";
@@ -138,6 +139,7 @@ class App extends Component {
                         )}
                     ></Route>
                     <Route exact path="/signup" component={SignupPage}/>
+                    <Route path="/users/:username" component={ProfilePage}/>
                     <Route render={props => (<div>NotFound</div>)}/>
                 </Switch>);
         }

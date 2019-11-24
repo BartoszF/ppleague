@@ -8,10 +8,7 @@ import pl.axit.ppleague.data.EventType;
 import pl.axit.ppleague.data.request.CreateMatchCancelationRequest;
 import pl.axit.ppleague.data.request.CreateMatchRequest;
 import pl.axit.ppleague.data.request.EndMatchRequest;
-import pl.axit.ppleague.data.response.CreateMatchResponse;
-import pl.axit.ppleague.data.response.EndMatchResponse;
-import pl.axit.ppleague.data.response.GetMatchesResponse;
-import pl.axit.ppleague.data.response.MatchResponse;
+import pl.axit.ppleague.data.response.*;
 import pl.axit.ppleague.exception.MatchExistsException;
 import pl.axit.ppleague.model.Match;
 import pl.axit.ppleague.model.Player;
@@ -132,5 +129,12 @@ public class MatchController {
         Player player = playerRepository.findById(playerId).orElseThrow(() -> new EntityNotFoundException("Player not found"));
 
         return matchService.getMatchesByPlayer(player);
+    }
+
+    @GetMapping("/pagedByPlayer")
+    public GetPagedMatchesResponse getPagedMatchesByPlayer(@RequestParam(name = "playerId") Long playerId, @RequestParam(name = "page") Integer page) {
+        Player player = playerRepository.findById(playerId).orElseThrow(() -> new EntityNotFoundException("Player not found"));
+
+        return matchService.getPagedMatchesByPlayer(player, page);
     }
 }
