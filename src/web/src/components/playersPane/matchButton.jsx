@@ -19,6 +19,7 @@ class MatchButton extends React.Component {
 
         this.playerAScoreChange = this.playerAScoreChange.bind(this);
         this.playerBScoreChange = this.playerBScoreChange.bind(this);
+        this.getButtonText = this.getButtonText.bind(this);
     }
 
     samePlayerAsMatch(playerId) {
@@ -27,7 +28,26 @@ class MatchButton extends React.Component {
                 && (this.props.matchStore.ongoingMatch.playerB.id === playerId || this.props.matchStore.ongoingMatch.playerA.id === playerId);
     }
 
+    isInvitation() {
+        const { userStore} = this.props;
+        const playerId = this.props.playerStore.selectedPlayer.playerId;
+        return userStore &&
+                            userStore.matchInvitations.length > 0 &&
+                            userStore.matchInvitations.filter(
+                                (value) => (value.notifier.player.playerId === playerId &&
+                                            value.notifier.player.playerId !== this.props.userStore.player.playerId) ||
+                                            (value.actor.player.playerId === playerId &&
+                                            value.actor.player.playerId !== this.props.userStore.player.playerId)
+                            ).length > 0;
+    }
+
     onClick(ev) {
+
+        if(this.isInvitation())
+        {
+            return;
+        }
+
         if (
             this.samePlayerAsMatch(this.props.playerStore.selectedPlayer.playerId)
         ) {
@@ -115,6 +135,20 @@ class MatchButton extends React.Component {
         }
     }
 
+    getButtonText() {
+        if(this.samePlayerAsMatch(this.props.playerStore.selectedPlayer.playerId))
+        {
+            return "END MATCH";
+        }
+
+        if(this.isInvitation())
+        {
+            return "Invitation waiting"
+        }
+
+        return "MATCH";
+    }
+
     render() {
         return (
             <div className="matchButton">
@@ -131,9 +165,7 @@ class MatchButton extends React.Component {
                             : "createMatch")
                     }
                 >
-                    {this.samePlayerAsMatch(this.props.playerStore.selectedPlayer.playerId)
-                        ? "END MATCH"
-                        : "MATCH"}
+                    {this.getButtonText()}
                 </div>
             </div>
         );
