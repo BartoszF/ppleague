@@ -1,10 +1,7 @@
 import * as React from "react";
 import {Icon} from 'antd';
 import {inject, observer} from "mobx-react";
-import {computed} from 'mobx';
 import "./PlayerListItem.css";
-
-import _ from 'lodash';
 
 @inject('userStore')
 @inject('matchStore')
@@ -14,9 +11,9 @@ class PlayerListItem extends React.Component {
     getIcons(isOngoing, isInvitation) {
         let icons = []
         if (isOngoing)
-            icons.push(<Icon height={'20px'} type="hourglass"/>);
+            icons.push(<Icon key={"ongoing"} height={'20px'} type="hourglass"/>);
         if(isInvitation)
-            icons.push(<Icon height={'20px'} type="clock-circle" />);
+            icons.push(<Icon key={"invitation"} height={'20px'} type="clock-circle" />);
 
         return icons;
     }
@@ -25,15 +22,15 @@ class PlayerListItem extends React.Component {
         const {matchStore, userStore} = this.props
         const isOngoing = matchStore  &&
                     matchStore.ongoingMatch  &&
-                    this.props.userStore.player.playerId != this.props.player.playerId &&
+                    this.props.userStore.player.playerId !== this.props.player.playerId &&
                     [matchStore.ongoingMatch.playerA.id , matchStore.ongoingMatch.playerB.id].includes(this.props.player.playerId);
         const isInvitation = userStore &&
                     userStore.matchInvitations.length > 0 &&
                     userStore.matchInvitations.filter(
                         (value) => (value.notifier.player.playerId === this.props.player.playerId &&
-                                    value.notifier.player.playerId != this.props.userStore.player.playerId) ||
+                                    value.notifier.player.playerId !== this.props.userStore.player.playerId) ||
                                     (value.actor.player.playerId === this.props.player.playerId &&
-                                    value.actor.player.playerId != this.props.userStore.player.playerId)
+                                    value.actor.player.playerId !== this.props.userStore.player.playerId)
                     ).length > 0;
         return (
             <div key={this.props.player.playerId} onClick={(ev) => this.props.click(ev, this.props.player)}

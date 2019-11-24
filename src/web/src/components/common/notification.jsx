@@ -27,22 +27,41 @@ class Notification extends React.Component {
         this.setState({acceptLoading: true});
         let notificationObj = this.props.notification;
 
-        MatchService.acceptInvitation(notificationObj.id)
-            .then((response) => {
-               this.props.matchStore.setOngoingMatch(response);
-               this.props.userStore.removeNotification(notificationObj);
-               this.setState({acceptLoading: false});
-               notification.success({
-                   message: APP_NAME,
-                   description: "Invitation accepted."
-               });
-            }).catch(err => {
-               this.setState({acceptLoading: false});
-               notification.error({
-                  message: APP_NAME,
-                  description: err.message
-              });
-            });
+        switch(notificationObj.eventType) {
+            case "MATCH_INV":
+                MatchService.acceptInvitation(notificationObj.id)
+                    .then((response) => {
+                        this.props.matchStore.setOngoingMatch(response);
+                       notification.success({
+                           message: APP_NAME,
+                           description: "Invitation accepted."
+                       });
+                       this.props.userStore.removeNotification(notificationObj);
+                    }).catch(err => {
+                       this.setState({acceptLoading: false});
+                       notification.error({
+                          message: APP_NAME,
+                          description: err.message
+                      });
+                    });
+
+               break;
+            case "MATCH_CANCEL":
+            //TODO Move from store to here (whole promise)
+                MatchService.acceptMatchCancel(notificationObj.eventId).then(() => {
+                      this.props.matchStore.setOngoingMatch(null);
+                      notification.success({
+                         message: APP_NAME,
+                         description: "Match cancelled"
+                     });
+                     this.props.userStore.removeNotification(notificationObj);
+                  }).catch(err => {})
+                break;
+            default:
+                break;
+       }
+
+
 
     }
 
@@ -52,12 +71,13 @@ class Notification extends React.Component {
 
         NotificationService.rejectNotification(notificationObj.id)
                     .then((response) => {
-                       this.props.userStore.removeNotification(notificationObj);
+
                        notification.success({
                            message: APP_NAME,
                            description: "Invitation rejected."
                        });
-                       this.setState({rejectLoading: false});
+
+                       this.props.userStore.removeNotification(notificationObj);
                     }).catch(err => {
                        this.setState({rejectLoading: false});
                        notification.error({

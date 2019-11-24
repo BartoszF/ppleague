@@ -169,6 +169,8 @@ public class MatchService {
             e.printStackTrace();
         }
 
+        notificationService.removeRemainingForMatch(match.getId());
+
         return response;
     }
 

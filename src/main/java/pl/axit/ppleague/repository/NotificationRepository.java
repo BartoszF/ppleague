@@ -1,6 +1,7 @@
 package pl.axit.ppleague.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import pl.axit.ppleague.model.Notification;
 import pl.axit.ppleague.model.User;
 
@@ -15,8 +16,11 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     List<Notification> findByNotifierId(Long notifierId);
 
-    List<Notification> findByNotifierOrActorAndEventType(User actor, User notifier, Integer eventType);
+    @Query("select n from Notification n where n.eventType = ?1 and (n.actor = ?2 or n.notifier = ?3)")
+    List<Notification> findByEventTypeAndNotifierOrActor(Integer eventType, User actor, User notifier);
 
     Optional<Notification> findByNotifierAndActorAndEventType(User notifier, User actor, Integer eventType);
+
+    List<Notification> findByEventIdAndEventType(Long eventId, Integer eventType);
 
 }

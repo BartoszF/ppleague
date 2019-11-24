@@ -1,8 +1,6 @@
-import {observable, action, computed} from "mobx";
+import {observable, action} from "mobx";
 
 import MatchService from "../services/MatchService";
-
-import _ from 'lodash';
 
 class MatchStore {
     @observable selectedPlayerMatches = [];
@@ -31,9 +29,20 @@ class MatchStore {
                 this.setOngoingMatch(match);
             }),
             action('error', err => {
-                console.log(err);
             })
          );
+    }
+
+    @action
+    cancelMatch(id) {
+        MatchService.acceptMatchCancel(id).then(
+          action('cancel', () => {
+              this.setOngoingMatch(null);
+          }),
+          action('error', err => {
+              console.log(err);
+          })
+       );
     }
 }
 

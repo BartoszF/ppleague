@@ -1,10 +1,14 @@
 import * as React from "react";
 import "./playerPane.css";
 import _ from "lodash";
-import {Avatar} from "antd";
+import {Avatar, Icon, Button, notification} from "antd";
+
+import { APP_NAME} from "../../constants";
 
 import MatchButton from "./matchButton";
 import {observer, inject} from "mobx-react";
+
+import MatchService from "../../services/MatchService"
 
 @inject('matchStore')
 @observer
@@ -12,6 +16,33 @@ class PlayerPane extends React.Component {
 
     matchButton() {
         if (this.props.other) return (<MatchButton/>);
+    }
+
+    cancelMatch() {
+        MatchService.cancelMatch(this.props.matchStore.ongoingMatch.id).then(() => {
+            notification.success({
+                message: APP_NAME,
+                description: "Other user was asked to cancel a match"
+            });
+        }).catch((error) => {
+            notification.error({
+                message: APP_NAME,
+                description: "Error while sending request"
+            });
+        });
+    }
+
+    cancelButton() {
+        if(this.props.other && this.samePlayerAsMatch(this.props.player.playerId))
+        {
+            return (<div title="Cancel match" className="cancelMatchButton"><Button onClick={this.cancelMatch.bind(this)} type="link"><Icon type="close" /></Button></div>)
+        }
+    }
+
+    samePlayerAsMatch(playerId) {
+            return this.props.matchStore.ongoingMatch
+                    && this.props.matchStore.ongoingMatch.playerB
+                    && (this.props.matchStore.ongoingMatch.playerB.id === playerId || this.props.matchStore.ongoingMatch.playerA.id === playerId);
     }
 
     getMatches() {
@@ -38,6 +69,7 @@ class PlayerPane extends React.Component {
                 </div>
 
                 {this.matchButton()}
+                {this.cancelButton()}
             </div>
         );
     }

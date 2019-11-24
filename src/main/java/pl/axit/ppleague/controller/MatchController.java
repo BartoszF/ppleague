@@ -1,8 +1,11 @@
 package pl.axit.ppleague.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.axit.ppleague.data.EventType;
+import pl.axit.ppleague.data.request.CreateMatchCancelationRequest;
 import pl.axit.ppleague.data.request.CreateMatchRequest;
 import pl.axit.ppleague.data.request.EndMatchRequest;
 import pl.axit.ppleague.data.response.CreateMatchResponse;
@@ -10,6 +13,7 @@ import pl.axit.ppleague.data.response.EndMatchResponse;
 import pl.axit.ppleague.data.response.GetMatchesResponse;
 import pl.axit.ppleague.data.response.MatchResponse;
 import pl.axit.ppleague.exception.MatchExistsException;
+import pl.axit.ppleague.model.Match;
 import pl.axit.ppleague.model.Player;
 import pl.axit.ppleague.model.User;
 import pl.axit.ppleague.repository.MatchRepository;
@@ -19,8 +23,10 @@ import pl.axit.ppleague.security.CurrentUser;
 import pl.axit.ppleague.security.UserPrincipal;
 import pl.axit.ppleague.service.MatchService;
 import pl.axit.ppleague.service.NotificationService;
+import pl.axit.ppleague.service.WsNotificationService;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/match")
@@ -36,6 +42,8 @@ public class MatchController {
     private PlayerRepository playerRepository;
     @Autowired
     NotificationService notificationService;
+    @Autowired
+    WsNotificationService wsNotificationService;
 
     @GetMapping
     public GetMatchesResponse getMatches() {
@@ -69,6 +77,54 @@ public class MatchController {
     public MatchResponse getMyOngoingMatch(@CurrentUser UserPrincipal currentUser) {
         Player player = userRepository.findById(currentUser.getId()).get().getPlayer();
         return matchService.getOngoingMatchForPlayer(player);
+    }
+
+    @PostMapping("/cancel")
+    public String createMatchCancelation(@CurrentUser UserPrincipal currentUser, @RequestBody CreateMatchCancelationRequest request) {
+        User actor = userRepository.getOne(currentUser.getId());
+        Match match = matchRepository.getOne(request.getMatchId());
+        User notifier = null;
+        if (actor.getId().equals(match.getPlayerA().getUser().getId())) {
+            notifier = match.getPlayerB().getUser();
+        } else {
+            notifier = match.getPlayerA().getUser();
+        }
+        notificationService.create(EventType.MATCH_CANCEL, match.getId(), actor, notifier);
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            wsNotificationService.notify(mapper.writeValueAsString(Map.of("match_cancel", match.getId())), notifier.getUsername());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return "{}";
+    }
+
+    @GetMapping("/{id}/cancel")
+    public String cancelMatch(@CurrentUser UserPrincipal currentUser, @PathVariable("id") Long matchId) {
+        Match match = matchRepository.getOne(matchId);
+
+        User notify = null;
+        if (currentUser.getId().equals(match.getPlayerA().getUser().getId())) {
+            notify = match.getPlayerB().getUser();
+        } else {
+            notify = match.getPlayerA().getUser();
+        }
+
+        notificationService.removeRemainingForMatch(matchId);
+
+        matchRepository.delete(match);
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            wsNotificationService.notify(mapper.writeValueAsString(Map.of("match_cancelled", matchId)), notify.getUsername());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return "{}";
     }
 
     @GetMapping("/byPlayer")

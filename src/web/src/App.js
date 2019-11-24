@@ -33,7 +33,8 @@ class App extends Component {
         super(props);
 
         this.state = {
-            isLoading: false
+            isLoading: false,
+            wsFailed: false
         };
         this.handleLogout = this.handleLogout.bind(this);
         this.loadCurrentUser = this.loadCurrentUser.bind(this);
@@ -53,12 +54,8 @@ class App extends Component {
 
         UserService.getCurrentUser()
             .then(response => {
-
                 userStore.setUser(response);
                 playerStore.setUserPlayer(response.player);
-
-                console.log(userStore.getUserString());
-                console.log(userStore.isAuthenticated);
 
                 matchStore.getOngoingMatch();
 
@@ -147,7 +144,6 @@ class App extends Component {
     }
 
     handleWebsocket(msg) {
-        console.log(msg);
         if(_.has(msg,'notification')){
             let notif = userStore.addNotification(msg.notification);
 
@@ -170,6 +166,18 @@ class App extends Component {
                 playerStore.setPlayers(response);
             })
         }
+
+        if(_.has(msg,'reject_match')){
+            userStore.getMatchInvitations();
+        }
+
+        if(_.has(msg,"match_cancelled")){
+            matchStore.setOngoingMatch(null);
+        }
+    }
+
+    websocketConnectionFail() {
+        this.setState({wsFailed: true});
     }
 
     render() {
@@ -179,17 +187,20 @@ class App extends Component {
                     <SockJsClient
                         url={"/ws"}
                         topics={["/user/topic/notify"]}
-                        debug={true}
+                        debug={false}
                         onMessage={(msg) => {
                             this.handleWebsocket(msg);
                         }}
                         onConnect={() => {
-                            console.log("ws connected")
+                            this.setState({wsFailed: false});
                             this.clientRef.sendMessage("/app/register", JSON.stringify({username: userStore.username}));
                         }}
+                        onDisconnect={this.websocketConnectionFail.bind(this)}
+                        onConnectFailure={this.websocketConnectionFail.bind(this)}
                         ref={(client) => {
                             this.clientRef = client
                         }}/>
+                    {this.state.wsFailed ? (<div className="wsFailed"><span>Websocket connection failure. Live update will not work.</span></div>) : ""}
                     <Router basename={"/web"} history={history}>
                         <AppHeader onLogout={this.handleLogout}/>
                         <Content className="app-content">

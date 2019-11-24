@@ -4,7 +4,6 @@ import './AppHeader.css';
 import {Dropdown, Icon, Layout, Menu, Badge} from 'antd';
 import { inject } from 'mobx-react';
 import { observer } from 'mobx-react';
-import { observable } from 'mobx';
 import Notification from './notification';
 
 const Header = Layout.Header;
@@ -113,15 +112,6 @@ function NotificationsDropdown(props) {
 function ProfileDropdownMenu(props) {
     const dropdownMenu = (
         <Menu theme="light" onClick={props.handleMenuClick} className="profile-dropdown-menu">
-            <Menu.Item key="user-info" className="dropdown-item" disabled>
-                <div className="user-full-name-info">
-                    {props.currentUser.name}
-                </div>
-                <div className="username-info">
-                    @{props.currentUser.username}
-                </div>
-            </Menu.Item>
-            <Menu.Divider/>
             <Menu.Item key="profile" className="dropdown-item">
                 <Link to={`/users/${props.currentUser.username}`}>Profile</Link>
             </Menu.Item>
@@ -136,9 +126,9 @@ function ProfileDropdownMenu(props) {
             overlay={dropdownMenu}
             trigger={['click']}
             getPopupContainer={() => document.getElementsByClassName('profile-menu')[0]}>
-            <a href="#" className="ant-dropdown-link">
+            <div className="ant-dropdown-link">
                 <Icon type="user" className="nav-icon" style={{marginRight: 0}}/> <Icon type="down"/>
-            </a>
+            </div>
         </Dropdown>
     );
 }

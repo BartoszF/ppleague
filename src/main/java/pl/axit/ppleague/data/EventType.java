@@ -4,7 +4,8 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum EventType {
-    MATCH_INV(1, "INV");
+    MATCH_INV(1, "INV"),
+    MATCH_CANCEL(2, "MATCH_CANCEL");
 
     private final String name;
     private final Integer id;

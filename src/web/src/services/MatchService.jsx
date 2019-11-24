@@ -41,6 +41,24 @@ const MatchService = {
             method: 'POST',
             body: JSON.stringify(body)
         })
+    },
+
+    cancelMatch: function(matchId) {
+        let body = {
+            matchId: matchId
+        }
+        return request({
+            url: "/match/cancel",
+            method: 'POST',
+            body: JSON.stringify(body)
+        })
+    },
+
+    acceptMatchCancel: function(matchId) {
+        return request({
+            url: "/match/"+matchId+"/cancel",
+            method: 'GET'
+        })
     }
 
 }

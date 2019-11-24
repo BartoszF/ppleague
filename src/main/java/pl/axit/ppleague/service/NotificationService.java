@@ -80,7 +80,16 @@ public class NotificationService {
         Notification notification = notificationRepository.findById(notificationId).orElseThrow();
 
         if (notification.getActor().getId().equals(userId) || notification.getNotifier().getId().equals(userId)) {
+            User notifier = notification.getNotifier();
+            User actor = notification.getActor();
+
             notificationRepository.delete(notification);
+
+            ObjectMapper mapper = new ObjectMapper();
+
+            wsNotificationService.notify(mapper.writeValueAsString(Map.of("reject_match", notifier.getId())), actor.getUsername());
+            wsNotificationService.notify(mapper.writeValueAsString(Map.of("reject_match", actor.getId())), notifier.getUsername());
+
             return;
         }
 
@@ -90,11 +99,15 @@ public class NotificationService {
     public List<Notification> getInvitationForPlayer(Long userId) {
         User user = userRepository.getOne(userId);
 
-        return notificationRepository.findByNotifierOrActorAndEventType(user, user, EventType.MATCH_INV.getId());
+        return notificationRepository.findByEventTypeAndNotifierOrActor(EventType.MATCH_INV.getId(), user, user);
     }
 
     public void delete(Notification notification) {
         notificationRepository.delete(notification);
+    }
+
+    public void removeRemainingForMatch(Long id) {
+        notificationRepository.findByEventIdAndEventType(id, EventType.MATCH_CANCEL.getId()).forEach(notification -> notificationRepository.delete(notification));
     }
 }
 

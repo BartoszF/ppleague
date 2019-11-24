@@ -31,6 +31,14 @@ class MatchButton extends React.Component {
         if (
             this.samePlayerAsMatch(this.props.playerStore.selectedPlayer.playerId)
         ) {
+            if(this.state.aScore === this.state.bScore)
+            {
+                notification.error({
+                    message: APP_NAME,
+                    description: "Enter proper score!"
+                });
+                return;
+            }
             console.log(this.state);
             MatchService.endMatch(this.state.aScore, this.state.bScore, this.props.matchStore.ongoingMatch.id)
                 .then(response => {
@@ -54,7 +62,6 @@ class MatchButton extends React.Component {
 
         MatchService.createInvitation(match)
             .then(() => {
-                //this.props.matchStore.ongoingMatch = response;
                 this.props.userStore.getMatchInvitations();
                 notification.success({
                     message: APP_NAME,

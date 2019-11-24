@@ -51,3 +51,18 @@
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Opera and Firefox */
 }
+
+.wsFailed{
+    position: absolute;
+    height: 30px;
+    width: 370px;
+    top: 0%;
+    left: 50%;
+    z-index: 1000;
+    background-color: white;
+    padding: 4px;
+    text-align: center;
+    vertical-align: middle;
+    transform: translate(-50%, 0%);
+    border: 1px solid red;
+}

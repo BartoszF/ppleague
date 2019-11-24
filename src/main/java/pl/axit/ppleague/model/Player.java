@@ -35,7 +35,7 @@ public class Player {
         volatility =  RatingCalculator.DEFAULT_VOLATILITY;
     }
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonManagedReference
     private User user;

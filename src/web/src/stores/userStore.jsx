@@ -33,6 +33,13 @@ class UserStore {
             case "MATCH_INV":
                 notification.title = "New match invitation!";
                 notification.message = notification.actor.name + " invited you for a match";
+                break;
+            case "MATCH_CANCEL":
+                notification.title = "New match cancelation";
+                notification.message = notification.actor.name + " wants to cancel a match with you";
+                break;
+            default:
+                break;
         }
 
         this.notifications.push(notification);

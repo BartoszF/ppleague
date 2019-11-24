@@ -26,7 +26,7 @@ class PlayerList extends React.Component {
         return (
             <div className={"playerList"}>
                 {this.props.players.map((player, index) => {
-                    return <PlayerListItem click={this.onClick.bind(this)} player={player} />
+                    return <PlayerListItem key={player.playerId} click={this.onClick.bind(this)} player={player} />
                 })}
             </div>
         )
