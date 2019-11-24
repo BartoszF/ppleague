@@ -59,7 +59,6 @@ class MatchButton extends React.Component {
                 });
                 return;
             }
-            console.log(this.state);
             MatchService.endMatch(this.state.aScore, this.state.bScore, this.props.matchStore.ongoingMatch.id)
                 .then(response => {
                     this.props.matchStore.ongoingMatch = null;
@@ -70,6 +69,10 @@ class MatchButton extends React.Component {
                     })
                 })
                 .catch(err => {
+                    notification.error({
+                        message: APP_NAME,
+                        description: "Something went wrong"
+                    });
                     console.log(err);
                 });
 

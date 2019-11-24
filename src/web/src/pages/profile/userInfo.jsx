@@ -78,16 +78,19 @@ class UserInfo extends React.Component {
         return (
         <div className="userInfo">
             <h1 className="userName">{this.state.player.name}</h1>
-            <InfiniteScroll
-                pageStart={-1}
-                loadMore={this.loadItems.bind(this)}
-                hasMore={this.state.hasMore}
-                loader={loader}>
+            <div style={{height: "600px", overflow: "auto"}}>
+                <InfiniteScroll
+                    pageStart={-1}
+                    loadMore={this.loadItems.bind(this)}
+                    hasMore={this.state.hasMore}
+                    loader={loader}
+                    useWindow={false}>
 
-                <div className="matches">
-                    {items}
-                </div>
-            </InfiniteScroll>
+                    <div className="matches">
+                        {items}
+                    </div>
+                </InfiniteScroll>
+            </div>
         </div>
         );
     }
