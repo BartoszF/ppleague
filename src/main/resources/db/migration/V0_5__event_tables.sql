@@ -14,7 +14,7 @@ create TABLE IF NOT EXISTS event
 create TABLE IF NOT EXISTS event_participant
 (
   ID    serial PRIMARY KEY,
-  user  integer references users (ID),
+  user_id  integer references users (ID),
   event integer references event (ID)
 );
 
