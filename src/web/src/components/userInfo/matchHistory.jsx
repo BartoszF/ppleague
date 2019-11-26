@@ -14,13 +14,14 @@ class MatchHistory extends React.Component {
             player: this.props.player,
             isLoading: this.props.isLoading,
             hasMore: true,
-            matches: []
+            matches: [],
+            initial: true
         }
     }
 
     componentDidUpdate(prevProps) {
         if(this.props.player !== prevProps.player)
-            this.setState({player: this.props.player, matches: [], hasMore: true});
+            this.setState({player: this.props.player, matches: [], hasMore: true, initial: true});
 
         if(this.props.isLoading !== prevProps.isLoading)
             this.setState({isLoading: this.props.isLoading})
@@ -32,6 +33,7 @@ class MatchHistory extends React.Component {
     }
 
     loadItems(page) {
+        this.setState({initial: false})
         MatchService.pagedMatchHistory(this.state.player.playerId,page).then((response) => {
             let matches = response.matches;
             let hasMore = response.hasMore;
@@ -71,6 +73,7 @@ class MatchHistory extends React.Component {
                     loadMore={this.loadItems.bind(this)}
                     hasMore={this.state.hasMore}
                     loader={loader}
+                    initialLoad={this.state.initial}
                     useWindow={false}>
 
                     <div className="matches">
