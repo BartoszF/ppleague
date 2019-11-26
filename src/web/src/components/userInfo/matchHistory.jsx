@@ -20,7 +20,7 @@ class MatchHistory extends React.Component {
 
     componentDidUpdate(prevProps) {
         if(this.props.player !== prevProps.player)
-            this.setState({player: this.props.player});
+            this.setState({player: this.props.player, matches: [], hasMore: true});
 
         if(this.props.isLoading !== prevProps.isLoading)
             this.setState({isLoading: this.props.isLoading})
