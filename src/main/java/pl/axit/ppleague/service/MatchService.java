@@ -83,7 +83,7 @@ public class MatchService {
     public GetPagedMatchesResponse getPagedMatchesByPlayer(Player player, Integer page) {
         List<MatchResponse> matchResponses = new ArrayList<>();
 
-        Page<Match> matches = pagedMatchRepository.getAllByPlayerAOrPlayerB(player, player, PageRequest.of(page, 20));
+        Page<Match> matches = pagedMatchRepository.getAllByPlayerAOrPlayerB(player, player, PageRequest.of(page, 10000)); //such huge number is temporary
 
         matches.forEach(match -> matchResponses.add(MatchResponse.from(match)));
 
