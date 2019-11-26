@@ -14,3 +14,22 @@
 .match.lose {
     background-color: rgba(255, 33, 33, 0.47);
 }
+
+.match > span {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+.match > span:nth-child(1) {
+    text-align: right;
+}
+
+.match > span:nth-child(2) {
+    text-align: center;
+    width: 40%;
+}
+
+.match > span:nth-child(3) {
+    text-align: left;
+}
