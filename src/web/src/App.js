@@ -80,7 +80,7 @@ class App extends Component {
     }
 
     componentDidMount() {
-        if (Notification.permission !== 'denied') {
+        if (!history.location.pathname.includes("/public/") && Notification.permission !== 'denied') {
             Notification.requestPermission()
         }
 
