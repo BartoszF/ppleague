@@ -80,7 +80,7 @@ class PlayerPane extends React.Component {
                     {this.getMatches()}
                 </div>
 
-                {this.publicMatchHistory()}
+                {/*this.publicMatchHistory()*/}
                 {this.matchButton()}
                 {this.cancelButton()}
             </div>
