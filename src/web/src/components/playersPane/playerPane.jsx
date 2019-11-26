@@ -6,6 +6,8 @@ import {Avatar, Icon, Button, notification} from "antd";
 import { APP_NAME} from "../../constants";
 
 import MatchButton from "./matchButton";
+import MatchHistory from "../userInfo/matchHistory";
+import UserInfo from "../../pages/profile/userInfo"
 import {observer, inject} from "mobx-react";
 
 import MatchService from "../../services/MatchService"
@@ -51,6 +53,16 @@ class PlayerPane extends React.Component {
         );
     }
 
+    publicMatchHistory() {
+        if(!this.props.public)
+            return;
+
+        return (
+            <MatchHistory player={this.props.player} isLoading={false}/>
+        )
+
+    }
+
     render() {
         if (_.isEmpty(this.props.player)) {
             return <div className={"playerPane"}></div>;
@@ -68,6 +80,7 @@ class PlayerPane extends React.Component {
                     {this.getMatches()}
                 </div>
 
+                {this.publicMatchHistory()}
                 {this.matchButton()}
                 {this.cancelButton()}
             </div>

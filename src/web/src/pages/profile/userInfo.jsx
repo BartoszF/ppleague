@@ -1,8 +1,8 @@
 import * as React from "react";
 import {inject, observer} from "mobx-react";
-import MatchService from "../../services/MatchService";
+
 import LoadingIndicator from "../../components/common/LoadingIndicator";
-import InfiniteScroll from 'react-infinite-scroller';
+import MatchHistory from "../../components/userInfo/matchHistory";
 
 import _ from 'lodash';
 
@@ -38,58 +38,11 @@ class UserInfo extends React.Component {
         return ("No player with this username")
     }
 
-    loadItems(page) {
-        MatchService.pagedMatchHistory(this.state.player.playerId,page).then((response) => {
-            let matches = response.matches;
-            let hasMore = response.hasMore;
-
-            let stateMatches = this.state.matches;
-
-            matches.forEach(match => {stateMatches.push(match)});
-
-            this.setState({hasMore: hasMore, matches: stateMatches});
-
-        }).catch(err => {
-        })
-    }
-
-    isWin(match) {
-        return (match.playerA.id === this.state.player.playerId && match.playerAScore > match.playerBScore) ||
-                (match.playerB.id === this.state.player.playerId && match.playerBScore > match.playerAScore)
-    }
-
     fullInfo() {
-        const loader = <LoadingIndicator/>;
-
-        var items = [];
-        this.state.matches.map((match, i) => {
-            items.push(
-                <div className={"match " + (this.isWin(match) ? "win" : "lose")} key={i}>
-                    <span>{match.playerA.user.username}</span>
-                    <span>
-                        {match.playerAScore + " : " + match.playerBScore}
-                    </span>
-
-                    <span>{match.playerB.user.username}</span>
-                </div>
-            );
-        });
         return (
         <div className="userInfo">
             <h1 className="userName">{this.state.player.name}</h1>
-            <div style={{height: "600px", overflow: "auto"}}>
-                <InfiniteScroll
-                    pageStart={-1}
-                    loadMore={this.loadItems.bind(this)}
-                    hasMore={this.state.hasMore}
-                    loader={loader}
-                    useWindow={false}>
-
-                    <div className="matches">
-                        {items}
-                    </div>
-                </InfiniteScroll>
-            </div>
+            <MatchHistory player={this.props.player} isLoading={false}/>
         </div>
         );
     }
