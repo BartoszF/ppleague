@@ -10,6 +10,8 @@ class PlayerListItem extends React.Component {
 
     getIcons(isOngoing, isInvitation) {
         let icons = []
+        if(this.props.public)
+            return;
         if (isOngoing)
             icons.push(<Icon key={"ongoing"} height={'20px'} type="hourglass"/>);
         if(isInvitation)
@@ -20,11 +22,11 @@ class PlayerListItem extends React.Component {
 
     render() {
         const {matchStore, userStore} = this.props
-        const isOngoing = matchStore  &&
+        const isOngoing = !this.props.public && matchStore  &&
                     matchStore.ongoingMatch  &&
                     this.props.userStore.player.playerId !== this.props.player.playerId &&
                     [matchStore.ongoingMatch.playerA.id , matchStore.ongoingMatch.playerB.id].includes(this.props.player.playerId);
-        const isInvitation = userStore &&
+        const isInvitation = !this.props.public && userStore &&
                     userStore.matchInvitations.length > 0 &&
                     userStore.matchInvitations.filter(
                         (value) => (value.notifier.player.playerId === this.props.player.playerId &&

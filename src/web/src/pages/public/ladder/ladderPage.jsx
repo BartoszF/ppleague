@@ -1,14 +1,14 @@
 import * as React from "react";
-import {inject, observer} from "mobx-react";
-import PlayerList from "../../components/playerList/playerList";
-import PlayerService from "../../services/PlayerService";
 import {Col} from "antd";
+import {inject, observer} from "mobx-react";
+import '../../../pages/ladderPage/ladderPage.css';
+import PlayerPane from "../../../components/playersPane/playerPane";
+import PlayerList from "../../../components/playerList/playerList";
 
-import './ladderPage.css';
-import PlayerPane from "../../components/playersPane/playerPane";
+import PlayerService from "../../../services/PlayerService";
 
 @inject('playerStore') @inject('matchStore') @inject('userStore') @observer
-class LadderPage extends React.Component {
+class PublicLadderPage extends React.Component {
 
     componentDidMount() {
         this.props.playerStore.selectPlayer(null);
@@ -21,15 +21,13 @@ class LadderPage extends React.Component {
         return (
             <div className="ladderContent" style={{height: "100%"}}>
                 <Col style={{height: "100%"}} span={5}>
-                    <PlayerList players={this.props.playerStore.players}/>
+                    <PlayerList players={this.props.playerStore.players} public={true}/>
                 </Col>
                 <Col className="playerPanes" style={{height: "100%"}} span={14}>
-                    <PlayerPane player={this.props.playerStore.userPlayer}/>
-                    <PlayerPane player={this.props.playerStore.selectedPlayer} other={true}/>
+                    <PlayerPane player={this.props.playerStore.selectedPlayer} other={true} public={true}/>
                 </Col>
             </div>
         )
     }
-}
 
-export default LadderPage;
+} export default PublicLadderPage;

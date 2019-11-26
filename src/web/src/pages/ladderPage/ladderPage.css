@@ -3,3 +3,8 @@
 .ladderContent {
     height: 100%;
 }
+
+.playerPanes {
+    display:flex;
+    flex-direction: column;
+}

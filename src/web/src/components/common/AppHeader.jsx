@@ -113,7 +113,7 @@ function ProfileDropdownMenu(props) {
     const dropdownMenu = (
         <Menu theme="light" onClick={props.handleMenuClick} className="profile-dropdown-menu">
             <Menu.Item key="profile" className="dropdown-item">
-                <Link to={`/users/${props.currentUser.username}`}>Profile</Link>
+                <Link to={`/public/users/${props.currentUser.username}`}>Profile</Link>
             </Menu.Item>
             <Menu.Item key="logout" className="dropdown-item">
                 Logout

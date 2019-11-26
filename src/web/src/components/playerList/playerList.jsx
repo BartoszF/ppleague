@@ -8,7 +8,7 @@ import MatchService from "../../services/MatchService";
 class PlayerList extends React.Component {
 
     onClick(ev, player) {
-        if(player.playerId === this.props.playerStore.userPlayer.playerId)
+        if(!this.props.public && player.playerId === this.props.playerStore.userPlayer.playerId)
         {
             return;
         }
@@ -26,7 +26,7 @@ class PlayerList extends React.Component {
         return (
             <div className={"playerList"}>
                 {this.props.players.map((player, index) => {
-                    return <PlayerListItem key={player.playerId} click={this.onClick.bind(this)} player={player} />
+                    return <PlayerListItem key={player.playerId} public={this.props.public} click={this.onClick.bind(this)} player={player} />
                 })}
             </div>
         )

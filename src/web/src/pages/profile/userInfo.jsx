@@ -1,6 +1,5 @@
 import * as React from "react";
 import {inject, observer} from "mobx-react";
-import PlayerService from "../../services/PlayerService";
 import MatchService from "../../services/MatchService";
 import LoadingIndicator from "../../components/common/LoadingIndicator";
 import InfiniteScroll from 'react-infinite-scroller';
@@ -28,10 +27,10 @@ class UserInfo extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if(this.props.player != prevProps.player)
+        if(this.props.player !== prevProps.player)
             this.setState({player: this.props.player});
 
-        if(this.props.isLoading != prevProps.isLoading)
+        if(this.props.isLoading !== prevProps.isLoading)
             this.setState({isLoading: this.props.isLoading})
     }
 

@@ -12,7 +12,7 @@ import {Layout, notification} from "antd";
 import PrivateRoute from "./components/common/PrivateRoute";
 import LoginPage from "./pages/loginPage/LoginPage";
 import SignupPage from "./pages/signupPage/Signup";
-import ProfilePage from "./pages/profile/profilePage";
+import PublicRouter from "./pages/public/publicRouter";
 import UserService from "./services/UserService";
 import PlayerService from "./services/PlayerService";
 import {ACCESS_TOKEN, APP_NAME} from "./constants";
@@ -68,7 +68,8 @@ class App extends Component {
                     isLoading: false
                 });
 
-                history.push("/");
+                if(!history.location.pathname.includes("/public/"))
+                    history.push("/");
             })
             .catch(error => {
                 console.log(error);
@@ -82,6 +83,7 @@ class App extends Component {
         if (Notification.permission !== 'denied') {
             Notification.requestPermission()
         }
+
         this.loadCurrentUser();
     }
 
@@ -139,7 +141,8 @@ class App extends Component {
                         )}
                     ></Route>
                     <Route exact path="/signup" component={SignupPage}/>
-                    <Route path="/users/:username" component={ProfilePage}/>
+
+                    <Route path="/public" component={PublicRouter}/>
                     <Route render={props => (<div>NotFound</div>)}/>
                 </Switch>);
         }
@@ -203,7 +206,7 @@ class App extends Component {
                             this.clientRef = client
                         }}/>
                     {this.state.wsFailed ? (<div className="wsFailed"><span>Websocket connection failure. Live update will not work.</span></div>) : ""}
-                    <Router basename={"/web"} history={history}>
+                    <Router basename={"/"} history={history}>
                         <AppHeader onLogout={this.handleLogout}/>
                         <Content className="app-content">
                             <div className="container">

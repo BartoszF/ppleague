@@ -15,7 +15,7 @@ import MatchService from "../../services/MatchService"
 class PlayerPane extends React.Component {
 
     matchButton() {
-        if (this.props.other) return (<MatchButton/>);
+        if (!this.props.public && this.props.other) return (<MatchButton/>);
     }
 
     cancelMatch() {
@@ -33,7 +33,7 @@ class PlayerPane extends React.Component {
     }
 
     cancelButton() {
-        if(this.props.other && this.samePlayerAsMatch(this.props.player.playerId))
+        if(!this.props.public && this.props.other && this.samePlayerAsMatch(this.props.player.playerId))
         {
             return (<div title="Cancel match" className="cancelMatchButton"><Button onClick={this.cancelMatch.bind(this)} type="link"><Icon type="close" /></Button></div>)
         }
