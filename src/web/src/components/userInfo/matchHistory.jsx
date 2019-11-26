@@ -14,14 +14,13 @@ class MatchHistory extends React.Component {
             player: this.props.player,
             isLoading: this.props.isLoading,
             hasMore: true,
-            matches: [],
-            initial: true
+            matches: []
         }
     }
 
     componentDidUpdate(prevProps) {
         if(this.props.player !== prevProps.player) {
-            this.setState({player: this.props.player, matches: [], hasMore: true, initial: true});
+            this.setState({player: this.props.player, matches: [], hasMore: true});
             this.loadItems(0);
         }
 
@@ -67,6 +66,7 @@ class MatchHistory extends React.Component {
             );
         });
 
+//TODO: remove this crap Infinite scroller
         return (
 
             <div style={{maxHeight: "300px", overflow: "auto"}}>
@@ -75,7 +75,6 @@ class MatchHistory extends React.Component {
                     loadMore={this.loadItems.bind(this)}
                     hasMore={this.state.hasMore}
                     loader={loader}
-                    initialLoad={this.state.initial}
                     useWindow={false}>
 
                     <div className="matches">
