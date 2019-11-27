@@ -2,7 +2,6 @@ package pl.axit.ppleague.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageType;
@@ -14,9 +13,12 @@ import java.util.HashMap;
 @Service
 public class WsNotificationService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
+    private final SimpMessagingTemplate simpMessagingTemplate;
     private HashMap<String, String> userCache = new HashMap<>();
+
+    public WsNotificationService(SimpMessagingTemplate simpMessagingTemplate) {
+        this.simpMessagingTemplate = simpMessagingTemplate;
+    }
 
     public void notify(String message, String userName) {
         String sessionId = getUserCache().get(userName);

@@ -1,6 +1,5 @@
 package pl.axit.ppleague.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.axit.ppleague.data.response.PlayerMatchesResponse;
@@ -16,14 +15,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/players")
 public class PlayerController {
-    @Autowired
-    PlayerRepository playerRepository;
+    private final PlayerRepository playerRepository;
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    MatchService matchService;
+    private final MatchService matchService;
+
+    public PlayerController(PlayerRepository playerRepository, UserRepository userRepository, MatchService matchService) {
+        this.playerRepository = playerRepository;
+        this.userRepository = userRepository;
+        this.matchService = matchService;
+    }
 
     @GetMapping
     public ResponseEntity<List<PlayerResponse>> getPlayers() {

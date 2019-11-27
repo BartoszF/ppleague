@@ -1,10 +1,13 @@
-import {observable} from "mobx"
+import { observable } from 'mobx';
 
 export default class Player {
-    @observable id = 0
-    @observable name = ""
-    @observable rating = 1000
-    @observable deviation = 0
+    @observable id = 0;
+
+    @observable name = '';
+
+    @observable rating = 1000;
+
+    @observable deviation = 0;
 
     constructor(id, name, rating, deviation) {
         this.id = id;
@@ -12,5 +15,4 @@ export default class Player {
         this.rating = rating;
         this.deviation = deviation;
     }
-
 }

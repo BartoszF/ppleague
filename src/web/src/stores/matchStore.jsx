@@ -1,12 +1,15 @@
-import {observable, action} from "mobx";
+import { action, observable } from 'mobx';
 
-import MatchService from "../services/MatchService";
+import MatchService from '../services/MatchService';
 
 class MatchStore {
     @observable selectedPlayerMatches = [];
+
     @observable userPlayerMatches = [];
+
     @observable selectedPlayerLoading = false;
-    @observable ongoingMatch = null
+
+    @observable ongoingMatch = null;
 
     @action setSelectedPlayerMatches(matches) {
         this.selectedPlayerMatches = matches;
@@ -23,26 +26,27 @@ class MatchStore {
 
     @action
     getOngoingMatch() {
-        MatchService.getOngoinMatch().then(
-
-            action('getOngoingMatch', match => {
+        MatchService.getOngoinMatch()
+          .then(
+            action('getOngoingMatch', (match) => {
                 this.setOngoingMatch(match);
             }),
-            action('error', err => {
-            })
-         );
+            action('error', (err) => {
+            }),
+          );
     }
 
     @action
     cancelMatch(id) {
-        MatchService.acceptMatchCancel(id).then(
-          action('cancel', () => {
-              this.setOngoingMatch(null);
-          }),
-          action('error', err => {
-              console.log(err);
-          })
-       );
+        MatchService.acceptMatchCancel(id)
+          .then(
+            action('cancel', () => {
+                this.setOngoingMatch(null);
+            }),
+            action('error', (err) => {
+                console.log(err);
+            }),
+          );
     }
 }
 

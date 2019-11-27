@@ -1,9 +1,14 @@
-import React, {Component} from "react";
-import "./Signup.css";
-import {Link} from "react-router-dom";
-import {APP_NAME, EMAIL_MAX_LENGTH, PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH} from "../../constants";
+import React, { Component } from 'react';
+import './Signup.css';
+import { Link } from 'react-router-dom';
+import { Button, Form, Input, notification, } from 'antd';
+import {
+  APP_NAME,
+  EMAIL_MAX_LENGTH,
+  PASSWORD_MAX_LENGTH,
+  PASSWORD_MIN_LENGTH,
+} from '../../constants';
 
-import {Button, Form, Input, notification} from "antd";
 import UserService from '../../services/UserService';
 
 const FormItem = Form.Item;
@@ -13,11 +18,11 @@ class SignupPage extends Component {
     super(props);
     this.state = {
       email: {
-        value: ""
+        value: '',
       },
       password: {
-        value: ""
-      }
+        value: '',
+      },
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -26,15 +31,15 @@ class SignupPage extends Component {
   }
 
   handleInputChange(event, validationFun) {
-    const target = event.target;
+    const { target } = event;
     const inputName = target.name;
     const inputValue = target.value;
 
     this.setState({
       [inputName]: {
         value: inputValue,
-        ...validationFun(inputValue)
-      }
+        ...validationFun(inputValue),
+      },
     });
   }
 
@@ -43,30 +48,30 @@ class SignupPage extends Component {
 
     const signupRequest = {
       email: this.state.email.value,
-      password: this.state.password.value
+      password: this.state.password.value,
     };
     UserService.signup(signupRequest)
-      .then(response => {
+      .then((response) => {
         notification.success({
           message: APP_NAME,
           description:
-            "Thank you! You're successfully registered. Please Login to continue!"
+            'Thank you! You\'re successfully registered. Please Login to continue!',
         });
-        this.props.history.push("/login");
+        this.props.history.push('/login');
       })
-      .catch(error => {
+      .catch((error) => {
         notification.error({
           message: APP_NAME,
           description:
-            error.message || "Sorry! Something went wrong. Please try again!"
+            error.message || 'Sorry! Something went wrong. Please try again!',
         });
       });
   }
 
   isFormInvalid() {
     return !(
-      this.state.email.validateStatus === "success" &&
-      this.state.password.validateStatus === "success"
+      this.state.email.validateStatus === 'success'
+      && this.state.password.validateStatus === 'success'
     );
   }
 
@@ -90,9 +95,7 @@ class SignupPage extends Component {
                 placeholder="Your email"
                 value={this.state.email.value}
                 onBlur={this.validateEmailAvailability}
-                onChange={event =>
-                  this.handleInputChange(event, this.validateEmail)
-                }
+                onChange={(event) => this.handleInputChange(event, this.validateEmail)}
               />
             </FormItem>
             <FormItem
@@ -107,9 +110,7 @@ class SignupPage extends Component {
                 autoComplete="off"
                 placeholder="A password between 6 to 20 characters"
                 value={this.state.password.value}
-                onChange={event =>
-                  this.handleInputChange(event, this.validatePassword)
-                }
+                onChange={(event) => this.handleInputChange(event, this.validatePassword)}
               />
             </FormItem>
             <FormItem>
@@ -122,7 +123,9 @@ class SignupPage extends Component {
               >
                 Sign up
               </Button>
-              Already registed? <Link to="/login">Login now!</Link>
+              Already registed?
+              {' '}
+              <Link to="/login">Login now!</Link>
             </FormItem>
           </Form>
         </div>
@@ -132,48 +135,48 @@ class SignupPage extends Component {
 
   // Validation Functions
 
-  validateEmail = email => {
+  validateEmail = (email) => {
     if (!email) {
       return {
-        validateStatus: "error",
-        errorMsg: "Email may not be empty"
+        validateStatus: 'error',
+        errorMsg: 'Email may not be empty',
       };
     }
 
-    const EMAIL_REGEX = RegExp("[^@ ]+@[^@ ]+\\.[^@ ]+");
+    const EMAIL_REGEX = RegExp('[^@ ]+@[^@ ]+\\.[^@ ]+');
     if (!EMAIL_REGEX.test(email)) {
       return {
-        validateStatus: "error",
-        errorMsg: "Email not valid"
+        validateStatus: 'error',
+        errorMsg: 'Email not valid',
       };
     }
 
-      if (!email.includes("@siemens-logistics.com")) {
-          return {
-              validateStatus: "error",
-              errorMsg: "Email is not from 'siemens-logistics.com' domain"
-          }
-      }
+    if (!email.includes('@siemens-logistics.com')) {
+      return {
+        validateStatus: 'error',
+        errorMsg: 'Email is not from \'siemens-logistics.com\' domain',
+      };
+    }
 
-      const firstParts = email.split("@")[0].split(".").length;
+    const firstParts = email.split('@')[0].split('.').length;
 
-      if (firstParts !== 2) {
-          return {
-              validateStatus: "error",
-              errorMsg: "Email is not in 'name.surname@siemens-logistics.com' form"
-          }
-      }
+    if (firstParts !== 2) {
+      return {
+        validateStatus: 'error',
+        errorMsg: 'Email is not in \'name.surname@siemens-logistics.com\' form',
+      };
+    }
 
     if (email.length > EMAIL_MAX_LENGTH) {
       return {
-        validateStatus: "error",
-        errorMsg: `Email is too long (Maximum ${EMAIL_MAX_LENGTH} characters allowed)`
+        validateStatus: 'error',
+        errorMsg: `Email is too long (Maximum ${EMAIL_MAX_LENGTH} characters allowed)`,
       };
     }
 
     return {
       validateStatus: null,
-      errorMsg: null
+      errorMsg: null,
     };
   };
 
@@ -182,12 +185,12 @@ class SignupPage extends Component {
     const emailValue = this.state.email.value;
     const emailValidation = this.validateEmail(emailValue);
 
-    if (emailValidation.validateStatus === "error") {
+    if (emailValidation.validateStatus === 'error') {
       this.setState({
         email: {
           value: emailValue,
-          ...emailValidation
-        }
+          ...emailValidation,
+        },
       });
       return;
     }
@@ -195,60 +198,60 @@ class SignupPage extends Component {
     this.setState({
       email: {
         value: emailValue,
-        validateStatus: "validating",
-        errorMsg: null
-      }
+        validateStatus: 'validating',
+        errorMsg: null,
+      },
     });
 
     UserService.checkEmailAvailability(emailValue)
-      .then(response => {
+      .then((response) => {
         if (response.available) {
           this.setState({
             email: {
               value: emailValue,
-              validateStatus: "success",
-              errorMsg: null
-            }
+              validateStatus: 'success',
+              errorMsg: null,
+            },
           });
         } else {
           this.setState({
             email: {
               value: emailValue,
-              validateStatus: "error",
-              errorMsg: "This Email is already registered"
-            }
+              validateStatus: 'error',
+              errorMsg: 'This Email is already registered',
+            },
           });
         }
       })
-      .catch(error => {
+      .catch((error) => {
         // Marking validateStatus as success, Form will be recchecked at server
         this.setState({
           email: {
             value: emailValue,
-            validateStatus: "success",
-            errorMsg: null
-          }
+            validateStatus: 'success',
+            errorMsg: null,
+          },
         });
       });
   }
 
-  validatePassword = password => {
+  validatePassword = (password) => {
     if (password.length < PASSWORD_MIN_LENGTH) {
       return {
-        validateStatus: "error",
-        errorMsg: `Password is too short (Minimum ${PASSWORD_MIN_LENGTH} characters needed.)`
-      };
-    } else if (password.length > PASSWORD_MAX_LENGTH) {
-      return {
-        validationStatus: "error",
-        errorMsg: `Password is too long (Maximum ${PASSWORD_MAX_LENGTH} characters allowed.)`
-      };
-    } else {
-      return {
-        validateStatus: "success",
-        errorMsg: null
+        validateStatus: 'error',
+        errorMsg: `Password is too short (Minimum ${PASSWORD_MIN_LENGTH} characters needed.)`,
       };
     }
+    if (password.length > PASSWORD_MAX_LENGTH) {
+      return {
+        validationStatus: 'error',
+        errorMsg: `Password is too long (Maximum ${PASSWORD_MAX_LENGTH} characters allowed.)`,
+      };
+    }
+    return {
+      validateStatus: 'success',
+      errorMsg: null,
+    };
   };
 }
 

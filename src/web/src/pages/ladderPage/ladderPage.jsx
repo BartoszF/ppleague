@@ -1,35 +1,43 @@
-import * as React from "react";
-import {inject, observer} from "mobx-react";
-import PlayerList from "../../components/playerList/playerList";
-import PlayerService from "../../services/PlayerService";
-import {Col} from "antd";
+import * as React from 'react';
+import PropTypes from 'prop-types';
+import { inject, observer } from 'mobx-react';
+import { Col } from 'antd';
+import PlayerList from '../../components/playerList/playerList';
+import PlayerService from '../../services/PlayerService';
 
 import './ladderPage.css';
-import PlayerPane from "../../components/playersPane/playerPane";
+import PlayerPane from '../../components/playersPane/playerPane';
 
 @inject('playerStore') @inject('matchStore') @inject('userStore') @observer
 class LadderPage extends React.Component {
+  componentDidMount() {
+    this.props.playerStore.selectPlayer(null);
+    PlayerService.getPlayers()
+      .then((response) => {
+        this.props.playerStore.setPlayers(response);
+      });
+  }
 
-    componentDidMount() {
-        this.props.playerStore.selectPlayer(null);
-        PlayerService.getPlayers().then((response) => {
-            this.props.playerStore.setPlayers(response);
-        })
-    }
+  render() {
+    const { playerStore } = this.props;
+    const { players, userPlayer, selectedPlayer } = playerStore;
 
-    render() {
-        return (
-            <div className="ladderContent" style={{height: "100%"}}>
-                <Col style={{height: "100%"}} span={5}>
-                    <PlayerList players={this.props.playerStore.players}/>
-                </Col>
-                <Col className="playerPanes" style={{height: "100%"}} span={14}>
-                    <PlayerPane player={this.props.playerStore.userPlayer}/>
-                    <PlayerPane player={this.props.playerStore.selectedPlayer} other={true}/>
-                </Col>
-            </div>
-        )
-    }
+    return (
+      <div className="ladderContent" style={{ height: '100%' }}>
+        <Col style={{ height: '100%' }} span={5}>
+          <PlayerList players={players}/>
+        </Col>
+        <Col className="playerPanes" style={{ height: '100%' }} span={14}>
+          <PlayerPane player={userPlayer}/>
+          <PlayerPane player={selectedPlayer} other/>
+        </Col>
+      </div>
+    );
+  }
 }
+
+LadderPage.propTypes = {
+  playerStore: PropTypes.objectOf(PropTypes.object()).isRequired,
+};
 
 export default LadderPage;

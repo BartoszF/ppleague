@@ -2,7 +2,6 @@ package pl.axit.ppleague.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.axit.ppleague.data.EventType;
 import pl.axit.ppleague.data.request.CreateMatchCancelationRequest;
@@ -28,19 +27,22 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/match")
 public class MatchController {
-    @Autowired
-    private MatchService matchService;
+    private final MatchService matchService;
 
-    @Autowired
-    MatchRepository matchRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    private PlayerRepository playerRepository;
-    @Autowired
-    NotificationService notificationService;
-    @Autowired
-    WsNotificationService wsNotificationService;
+    private final MatchRepository matchRepository;
+    private final UserRepository userRepository;
+    private final PlayerRepository playerRepository;
+    private final NotificationService notificationService;
+    private final WsNotificationService wsNotificationService;
+
+    public MatchController(MatchService matchService, MatchRepository matchRepository, UserRepository userRepository, PlayerRepository playerRepository, NotificationService notificationService, WsNotificationService wsNotificationService) {
+        this.matchService = matchService;
+        this.matchRepository = matchRepository;
+        this.userRepository = userRepository;
+        this.playerRepository = playerRepository;
+        this.notificationService = notificationService;
+        this.wsNotificationService = wsNotificationService;
+    }
 
     @GetMapping
     public GetMatchesResponse getMatches() {

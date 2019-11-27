@@ -2,7 +2,6 @@ package pl.axit.ppleague.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.axit.ppleague.data.EventType;
 import pl.axit.ppleague.data.response.NotificationResponse;
@@ -22,17 +21,17 @@ import java.util.Optional;
 @Service
 public class NotificationService {
 
-    @Autowired
-    private NotificationRepository notificationRepository;
+    private final NotificationRepository notificationRepository;
+    private final WsNotificationService wsNotificationService;
+    private final UserRepository userRepository;
+    private final PlayerRepository playerRepository;
 
-    @Autowired
-    WsNotificationService wsNotificationService;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    PlayerRepository playerRepository;
+    public NotificationService(NotificationRepository notificationRepository, WsNotificationService wsNotificationService, UserRepository userRepository, PlayerRepository playerRepository) {
+        this.notificationRepository = notificationRepository;
+        this.wsNotificationService = wsNotificationService;
+        this.userRepository = userRepository;
+        this.playerRepository = playerRepository;
+    }
 
     public Optional<Notification> find(Long notificationId) {
         return notificationRepository.findById(notificationId);

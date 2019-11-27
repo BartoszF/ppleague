@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.goochjs.glicko2.Rating;
 import org.goochjs.glicko2.RatingCalculator;
 import org.goochjs.glicko2.RatingPeriodResults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -29,29 +28,32 @@ import java.util.*;
 @Service
 public class MatchService {
 
-    @Autowired
-    private MatchRepository matchRepository;
+    private final MatchRepository matchRepository;
 
-    @Autowired
-    private PagedMatchRepository pagedMatchRepository;
+    private final PagedMatchRepository pagedMatchRepository;
 
-    @Autowired
-    private PlayerRepository playerRepository;
+    private final PlayerRepository playerRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private RatingCalculator ratingCalculator;
+    private final RatingCalculator ratingCalculator;
 
-    @Autowired
-    private NotificationService notificationService;
+    private final NotificationService notificationService;
 
-    @Autowired
-    private RatingPeriodResults results;
+    private final RatingPeriodResults results;
 
-    @Autowired
-    private WsNotificationService wsNotificationService;
+    private final WsNotificationService wsNotificationService;
+
+    public MatchService(MatchRepository matchRepository, PagedMatchRepository pagedMatchRepository, PlayerRepository playerRepository, UserRepository userRepository, RatingCalculator ratingCalculator, NotificationService notificationService, RatingPeriodResults results, WsNotificationService wsNotificationService) {
+        this.matchRepository = matchRepository;
+        this.pagedMatchRepository = pagedMatchRepository;
+        this.playerRepository = playerRepository;
+        this.userRepository = userRepository;
+        this.ratingCalculator = ratingCalculator;
+        this.notificationService = notificationService;
+        this.results = results;
+        this.wsNotificationService = wsNotificationService;
+    }
 
     public GetMatchesResponse getMatches() {
         List<MatchResponse> matches = new ArrayList<>();

@@ -1,6 +1,5 @@
 package pl.axit.ppleague.controller.ws;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
@@ -11,8 +10,11 @@ import pl.axit.ppleague.service.WsNotificationService;
 @Controller
 public class SessionController {
 
-    @Autowired
-    WsNotificationService notificationService;
+    private final WsNotificationService notificationService;
+
+    public SessionController(WsNotificationService notificationService) {
+        this.notificationService = notificationService;
+    }
 
     @MessageMapping("/register")
     public void registerClient(@Payload RegisterMessageRequest message, SimpMessageHeaderAccessor headerAccessor) {

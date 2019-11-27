@@ -1,27 +1,27 @@
-import {request} from '../APIUtils';
+import { request } from '../APIUtils';
 
 const PlayerService = {
-    getPlayers: function() {
+    getPlayers() {
         return request({
-            url: "/players",
-            method: 'GET'
+            url: '/players',
+            method: 'GET',
         });
     },
 
-    getMatches: function (playerId) {
+    getMatches(playerId) {
         return request({
-            url: "/players/" + playerId + "/matches",
-            method: 'GET'
+            url: `/players/${playerId}/matches`,
+            method: 'GET',
         });
     },
 
-    getPlayerByUsername: function (username) {
+    getPlayerByUsername(username) {
         return request({
-            url: "/players/byUsername?username="+username,
-            method: 'GET'
+            url: `/players/byUsername?username=${username}`,
+            method: 'GET',
         });
     },
 
-}
+};
 
 export default PlayerService;

@@ -1,73 +1,73 @@
 import { request } from '../APIUtils';
 
 const MatchService = {
-    getMatchByPlayer: function(player) {
+    getMatchByPlayer(player) {
         return request({
-            url: "/match/byPlayer?playerId="+player.playerId,
-            method: 'GET'
+            url: `/match/byPlayer?playerId=${player.playerId}`,
+            method: 'GET',
         });
     },
 
-    createInvitation: function(match) {
+    createInvitation(match) {
         return request({
-            url: "/match",
+            url: '/match',
             method: 'POST',
-            body: JSON.stringify(match)
-        })
-    },
-
-    acceptInvitation: function(notificationId) {
-        return request({
-            url: "/match/accept/"+notificationId,
-            method: 'GET'
-        })
-    },
-
-    getOngoinMatch: function() {
-        return request({
-            url: "/match/ongoing",
-            method: 'GET'
+            body: JSON.stringify(match),
         });
     },
 
-    endMatch: function(playerAScore,playerBScore, matchId) {
-        let body = {
-            matchId: matchId,
-            playerAScore: playerAScore,
-            playerBScore: playerBScore
-        }
+    acceptInvitation(notificationId) {
         return request({
-            url: "/match/end",
+            url: `/match/accept/${notificationId}`,
+            method: 'GET',
+        });
+    },
+
+    getOngoinMatch() {
+        return request({
+            url: '/match/ongoing',
+            method: 'GET',
+        });
+    },
+
+    endMatch(playerAScore, playerBScore, matchId) {
+        const body = {
+            matchId,
+            playerAScore,
+            playerBScore,
+        };
+        return request({
+            url: '/match/end',
             method: 'POST',
-            body: JSON.stringify(body)
-        })
+            body: JSON.stringify(body),
+        });
     },
 
-    cancelMatch: function(matchId) {
-        let body = {
-            matchId: matchId
-        }
+    cancelMatch(matchId) {
+        const body = {
+            matchId,
+        };
         return request({
-            url: "/match/cancel",
+            url: '/match/cancel',
             method: 'POST',
-            body: JSON.stringify(body)
-        })
+            body: JSON.stringify(body),
+        });
     },
 
-    acceptMatchCancel: function(matchId) {
+    acceptMatchCancel(matchId) {
         return request({
-            url: "/match/"+matchId+"/cancel",
-            method: 'GET'
-        })
+            url: `/match/${matchId}/cancel`,
+            method: 'GET',
+        });
     },
 
-    pagedMatchHistory: function(playerId, page) {
-            return request({
-                url: "/match/pagedByPlayer?playerId="+playerId+"&page="+page,
-                method: 'GET'
-            })
-        }
+    pagedMatchHistory(playerId, page) {
+        return request({
+            url: `/match/pagedByPlayer?playerId=${playerId}&page=${page}`,
+            method: 'GET',
+        });
+    },
 
-}
+};
 
 export default MatchService;

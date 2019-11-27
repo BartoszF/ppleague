@@ -1,19 +1,19 @@
-import {action, observable} from "mobx";
-import PlayerService from "../services/PlayerService";
-import {notification} from "antd";
-import {APP_NAME} from "../constants";
+import { action, observable } from 'mobx';
+import { notification } from 'antd';
+import PlayerService from '../services/PlayerService';
+import { APP_NAME } from '../constants';
 
 class PlayerStore {
-    @observable players = []
-    @observable selectedPlayer = {}
-    @observable userPlayer = {}
+    @observable players = [];
+
+    @observable selectedPlayer = {};
+
+    @observable userPlayer = {};
 
     @action setPlayers(players) {
         this.players = [];
 
-        players.sort((a, b) => {
-            return b.rating - a.rating;
-        })
+        players.sort((a, b) => b.rating - a.rating);
 
         players.forEach((element, index) => {
             element.standing = index + 1;
@@ -31,7 +31,8 @@ class PlayerStore {
         this.players.forEach((element, index) => {
             element.isLoading = true;
 
-            PlayerService.getMatches(element.playerId).then(
+            PlayerService.getMatches(element.playerId)
+              .then(
                 action('getMatches', (matches) => {
                     if (element.playerId === this.userPlayer.playerId) {
                         this.userPlayer.matches = matches;
@@ -50,18 +51,17 @@ class PlayerStore {
                     notification.error({
                         message: APP_NAME,
                         description:
-                            "Couldn't get matches of player!"
+                          'Couldn\'t get matches of player!',
                     });
-                })
-            );
-        })
+                }),
+              );
+        });
     }
 
     @action selectPlayer(player) {
         this.selectedPlayer = player;
 
         if (this.selectedPlayer == null) return;
-
     }
 
     @action setUserPlayer(player) {
@@ -69,4 +69,4 @@ class PlayerStore {
     }
 }
 
-export default new PlayerStore()
+export default new PlayerStore();

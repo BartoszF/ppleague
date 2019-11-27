@@ -2,7 +2,6 @@ package pl.axit.ppleague.data;
 
 import org.goochjs.glicko2.RatingCalculator;
 import org.goochjs.glicko2.RatingPeriodResults;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import pl.axit.ppleague.repository.PlayerRepository;
@@ -10,8 +9,11 @@ import pl.axit.ppleague.repository.PlayerRepository;
 @Component
 public class Glicko {
 
-    @Autowired
-    private PlayerRepository playerRepository;
+    private final PlayerRepository playerRepository;
+
+    public Glicko(PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
+    }
 
     @Bean
     public RatingCalculator getRatingCalculator() {

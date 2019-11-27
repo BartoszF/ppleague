@@ -1,19 +1,19 @@
 import { request } from '../APIUtils';
 
 const NotificationService = {
-    rejectNotification: function(notificationId) {
+    rejectNotification(notificationId) {
         return request({
-            url: "/notification/"+notificationId+"/reject",
-            method: 'GET'
+            url: `/notification/${notificationId}/reject`,
+            method: 'GET',
         });
     },
-    getInvitations: function() {
+    getInvitations() {
         return request({
-            url: "/notification/matchInvitation",
-            method: 'GET'
+            url: '/notification/matchInvitation',
+            method: 'GET',
         });
     },
 
-}
+};
 
 export default NotificationService;

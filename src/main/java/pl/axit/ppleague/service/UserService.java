@@ -1,7 +1,6 @@
 package pl.axit.ppleague.service;
 
 import org.apache.commons.text.WordUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.axit.ppleague.data.request.CreateUserRequest;
@@ -20,17 +19,17 @@ import java.util.List;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final UserActivationRepository userActivationRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final PlayerRepository playerRepository;
 
-    @Autowired
-    private UserActivationRepository userActivationRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    PlayerRepository playerRepository;
+    public UserService(UserRepository userRepository, UserActivationRepository userActivationRepository, PasswordEncoder passwordEncoder, PlayerRepository playerRepository) {
+        this.userRepository = userRepository;
+        this.userActivationRepository = userActivationRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.playerRepository = playerRepository;
+    }
 
 
     @Transactional

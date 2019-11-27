@@ -1,6 +1,5 @@
 package pl.axit.ppleague.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pl.axit.ppleague.data.request.CreateUserRequest;
 import pl.axit.ppleague.data.response.NotificationsResponse;
@@ -17,14 +16,17 @@ import pl.axit.ppleague.service.UserService;
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    NotificationService notificationService;
+    private final NotificationService notificationService;
+
+    public UserController(UserService userService, UserRepository userRepository, NotificationService notificationService) {
+        this.userService = userService;
+        this.userRepository = userRepository;
+        this.notificationService = notificationService;
+    }
 
     @PostMapping
     public void createUser(@RequestBody CreateUserRequest request) throws UserExistsException {
@@ -34,8 +36,7 @@ public class UserController {
     @GetMapping("/me")
     public UserResponse getCurrentUser(@CurrentUser UserPrincipal currentUser) {
         User user = userRepository.getOne(currentUser.getId());
-        UserResponse userSummary = new UserResponse(currentUser.getId(), currentUser.getEmail(), currentUser.getName(), PlayerResponse.from(user.getPlayer()));
-        return userSummary;
+        return new UserResponse(currentUser.getId(), currentUser.getEmail(), currentUser.getName(), PlayerResponse.from(user.getPlayer()));
     }
 
     @GetMapping("/notifications")

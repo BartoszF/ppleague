@@ -1,10 +1,10 @@
-import * as React from "react";
-import { Link } from "react-router-dom";
-import { Form, Icon, Input, Button, notification } from "antd";
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+import { Button, Form, Icon, Input, notification, } from 'antd';
 
-import "./LoginPage.css";
-import UserService from "../../services/UserService";
-import { ACCESS_TOKEN, APP_NAME } from "../../constants";
+import './LoginPage.css';
+import UserService from '../../services/UserService';
+import { ACCESS_TOKEN, APP_NAME } from '../../constants';
 
 const FormItem = Form.Item;
 
@@ -18,25 +18,25 @@ class LoginPage extends React.Component {
     event.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        const loginRequest = Object.assign({}, values);
+        const loginRequest = { ...values };
         UserService.login(loginRequest)
-          .then(response => {
+          .then((response) => {
             localStorage.setItem(ACCESS_TOKEN, response.accessToken);
             this.props.onLogin();
           })
-          .catch(error => {
+          .catch((error) => {
             if (error.status === 401) {
               notification.error({
                 message: APP_NAME,
                 description:
-                  "Your email or password is incorrect. Please try again!"
+                  'Your email or password is incorrect. Please try again!',
               });
             } else {
               notification.error({
                 message: APP_NAME,
                 description:
-                  error.message ||
-                  "Sorry! Something went wrong. Please try again!"
+                  error.message
+                  || 'Sorry! Something went wrong. Please try again!',
               });
             }
           });
@@ -50,25 +50,28 @@ class LoginPage extends React.Component {
       <Form onSubmit={this.handleSubmit} className="login-form">
         <h1 className="page-title">Login</h1>
         <FormItem>
-          {getFieldDecorator("email", {
+          {getFieldDecorator('email', {
             rules: [
               {
                 required: true,
-                message: "Please input your email!"
-              }
-            ]
+                message: 'Please input your email!',
+              },
+            ],
           })(
             <Input
               prefix={<Icon type="user" />}
               size="large"
               name="email"
               placeholder="Email"
-            />
+            />,
           )}
         </FormItem>
         <FormItem>
-          {getFieldDecorator("password", {
-            rules: [{ required: true, message: "Please input your Password!" }]
+          {getFieldDecorator('password', {
+            rules: [{
+              required: true,
+              message: 'Please input your Password!'
+            }],
           })(
             <Input
               prefix={<Icon type="lock" />}
@@ -76,7 +79,7 @@ class LoginPage extends React.Component {
               name="password"
               type="password"
               placeholder="Password"
-            />
+            />,
           )}
         </FormItem>
         <FormItem>
@@ -88,11 +91,13 @@ class LoginPage extends React.Component {
           >
             Login
           </Button>
-          Or <Link to="/signup">register now!</Link>
+          Or
+          {' '}
+          <Link to="/signup">register now!</Link>
         </FormItem>
       </Form>
     );
   }
 }
 
-export default Form.create({ name: "login_page" })(LoginPage);
+export default Form.create({ name: 'login_page' })(LoginPage);

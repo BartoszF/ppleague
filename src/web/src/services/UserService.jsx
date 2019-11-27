@@ -1,61 +1,61 @@
-import {ACCESS_TOKEN} from "../constants";
+import { ACCESS_TOKEN } from '../constants';
 import { request } from '../APIUtils';
 
 const UserService = {
-    login: function (loginRequest) {
+    login(loginRequest) {
         return request({
-            url: "/auth/signin",
+            url: '/auth/signin',
             method: 'POST',
-            body: JSON.stringify(loginRequest)
+            body: JSON.stringify(loginRequest),
         });
     },
 
-    signup: function (signupRequest) {
+    signup(signupRequest) {
         return request({
-            url: "/auth/signup",
+            url: '/auth/signup',
             method: 'POST',
-            body: JSON.stringify(signupRequest)
+            body: JSON.stringify(signupRequest),
         });
     },
 
-    checkUsernameAvailability: function (username) {
+    checkUsernameAvailability(username) {
         return request({
-            url: "/user/checkUsernameAvailability?username=" + username,
-            method: 'GET'
+            url: `/user/checkUsernameAvailability?username=${username}`,
+            method: 'GET',
         });
     },
 
-    checkEmailAvailability: function (email) {
+    checkEmailAvailability(email) {
         return request({
-            url: "/user/checkEmailAvailability?email=" + email,
-            method: 'GET'
+            url: `/user/checkEmailAvailability?email=${email}`,
+            method: 'GET',
         });
     },
 
-    getCurrentUser: function () {
+    getCurrentUser() {
         if (!localStorage.getItem(ACCESS_TOKEN)) {
-            return Promise.reject("No access token set.");
+            return Promise.reject('No access token set.');
         }
 
         return request({
-            url: "/user/me",
-            method: 'GET'
+            url: '/user/me',
+            method: 'GET',
         });
     },
 
-    getUserProfile: function (username) {
+    getUserProfile(username) {
         return request({
-            url: "/users/" + username,
-            method: 'GET'
+            url: `/users/${username}`,
+            method: 'GET',
         });
     },
 
-    getNotifications: function() {
+    getNotifications() {
         return request({
-            url: "/user/notifications",
-            method: 'GET'
-        })
-    }
-}
+            url: '/user/notifications',
+            method: 'GET',
+        });
+    },
+};
 
 export default UserService;
