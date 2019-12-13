@@ -29,7 +29,7 @@ const { Content } = Layout;
 const stores = {
   playerStore,
   userStore,
-  matchStore
+  matchStore,
 };
 
 @observer

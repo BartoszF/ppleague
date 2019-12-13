@@ -13,12 +13,10 @@ export function request(options) {
   const defaults = { headers };
   options = { ...defaults, ...options };
 
-  return fetch(`/api${options.url}`, options)
-    .then((response) => response.json()
-      .then((json) => {
-        if (!response.ok) {
-          return Promise.reject(json);
-        }
-        return json;
-      }));
+  const response = fetch(`/api${options.url}`, options);
+  const json = response.json();
+  if (!response.ok) {
+    return Promise.reject(json);
+  }
+  return json;
 }

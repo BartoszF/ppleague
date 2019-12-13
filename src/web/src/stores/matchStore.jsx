@@ -12,41 +12,40 @@ class MatchStore {
     @observable ongoingMatch = null;
 
     @action setSelectedPlayerMatches(matches) {
-        this.selectedPlayerMatches = matches;
-        this.selectedPlayerLoading = false;
+      this.selectedPlayerMatches = matches;
+      this.selectedPlayerLoading = false;
     }
 
     @action setUserPlayerMatches(matches) {
-        this.userPlayerMatches = matches;
+      this.userPlayerMatches = matches;
     }
 
     @action setOngoingMatch(response) {
-        this.ongoingMatch = response;
+      this.ongoingMatch = response;
     }
 
     @action
     getOngoingMatch() {
-        MatchService.getOngoinMatch()
-          .then(
-            action('getOngoingMatch', (match) => {
-                this.setOngoingMatch(match);
-            }),
-            action('error', (err) => {
-            }),
-          );
+      MatchService.getOngoinMatch()
+        .then(
+          action('getOngoingMatch', (match) => {
+            this.setOngoingMatch(match);
+          }),
+          action('error', (err) => {
+          }),
+        );
     }
 
     @action
     cancelMatch(id) {
-        MatchService.acceptMatchCancel(id)
-          .then(
-            action('cancel', () => {
-                this.setOngoingMatch(null);
-            }),
-            action('error', (err) => {
-                console.log(err);
-            }),
-          );
+      MatchService.acceptMatchCancel(id)
+        .then(
+          action('cancel', () => {
+            this.setOngoingMatch(null);
+          }),
+          action('error', (err) => {
+          }),
+        );
     }
 }
 

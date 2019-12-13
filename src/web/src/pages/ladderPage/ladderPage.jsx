@@ -11,10 +11,12 @@ import PlayerPane from '../../components/playersPane/playerPane';
 @inject('playerStore') @inject('matchStore') @inject('userStore') @observer
 class LadderPage extends React.Component {
   componentDidMount() {
-    this.props.playerStore.selectPlayer(null);
+    const { playerStore } = this.props;
+
+    playerStore.selectPlayer(null);
     PlayerService.getPlayers()
       .then((response) => {
-        this.props.playerStore.setPlayers(response);
+        playerStore.setPlayers(response);
       });
   }
 
@@ -25,11 +27,11 @@ class LadderPage extends React.Component {
     return (
       <div className="ladderContent" style={{ height: '100%' }}>
         <Col style={{ height: '100%' }} span={5}>
-          <PlayerList players={players}/>
+          <PlayerList players={players} />
         </Col>
         <Col className="playerPanes" style={{ height: '100%' }} span={14}>
-          <PlayerPane player={userPlayer}/>
-          <PlayerPane player={selectedPlayer} other/>
+          <PlayerPane player={userPlayer} />
+          <PlayerPane player={selectedPlayer} other />
         </Col>
       </div>
     );

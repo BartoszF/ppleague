@@ -1,17 +1,12 @@
 package pl.axit.ppleague.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.*;
-import pl.axit.ppleague.data.EventType;
 import pl.axit.ppleague.data.request.CreateMatchCancelationRequest;
 import pl.axit.ppleague.data.request.CreateMatchRequest;
 import pl.axit.ppleague.data.request.EndMatchRequest;
 import pl.axit.ppleague.data.response.*;
 import pl.axit.ppleague.exception.MatchExistsException;
-import pl.axit.ppleague.model.Match;
 import pl.axit.ppleague.model.Player;
-import pl.axit.ppleague.model.User;
 import pl.axit.ppleague.repository.MatchRepository;
 import pl.axit.ppleague.repository.PlayerRepository;
 import pl.axit.ppleague.repository.UserRepository;
@@ -22,7 +17,6 @@ import pl.axit.ppleague.service.NotificationService;
 import pl.axit.ppleague.service.WsNotificationService;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/match")
@@ -51,20 +45,14 @@ public class MatchController {
 
     @PostMapping
     public String createMatchInvitation(@CurrentUser UserPrincipal currentUser, @RequestBody CreateMatchRequest request) throws MatchExistsException {
-        User actor = userRepository.getOne(currentUser.getId());
-        User notifier = playerRepository.getOne(request.getPlayerBId()).getUser();
-        notificationService.create(EventType.MATCH_INV, null, actor, notifier);
+        matchService.createMatchNotification(currentUser.getId(), request.getPlayerBId());
 
         return "{}";
     }
 
     @GetMapping("/accept/{id}")
     public CreateMatchResponse acceptMatchInvitation(@CurrentUser UserPrincipal userPrincipal, @PathVariable("id") Long notificationId) throws MatchExistsException {
-        Player player = userRepository.findById(userPrincipal.getId()).get().getPlayer();
-
-        CreateMatchResponse response = matchService.createMatchFromInvitation(notificationId, userPrincipal, player);
-
-        return response;
+        return matchService.createMatchFromInvitation(notificationId, userPrincipal, userPrincipal.getId());
     }
 
     @PostMapping("/end")
@@ -74,54 +62,19 @@ public class MatchController {
 
     @GetMapping("/ongoing")
     public MatchResponse getMyOngoingMatch(@CurrentUser UserPrincipal currentUser) {
-        Player player = userRepository.findById(currentUser.getId()).get().getPlayer();
-        return matchService.getOngoingMatchForPlayer(player);
+        return matchService.getOngoingMatchForPlayer(currentUser.getId());
     }
 
     @PostMapping("/cancel")
     public String createMatchCancelation(@CurrentUser UserPrincipal currentUser, @RequestBody CreateMatchCancelationRequest request) {
-        User actor = userRepository.getOne(currentUser.getId());
-        Match match = matchRepository.getOne(request.getMatchId());
-        User notifier = null;
-        if (actor.getId().equals(match.getPlayerA().getUser().getId())) {
-            notifier = match.getPlayerB().getUser();
-        } else {
-            notifier = match.getPlayerA().getUser();
-        }
-        notificationService.create(EventType.MATCH_CANCEL, match.getId(), actor, notifier);
-
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            wsNotificationService.notify(mapper.writeValueAsString(Map.of("match_cancel", match.getId())), notifier.getUsername());
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        matchService.createMatchCancelation(request.getMatchId(), currentUser.getId());
 
         return "{}";
     }
 
     @GetMapping("/{id}/cancel")
     public String cancelMatch(@CurrentUser UserPrincipal currentUser, @PathVariable("id") Long matchId) {
-        Match match = matchRepository.getOne(matchId);
-
-        User notify = null;
-        if (currentUser.getId().equals(match.getPlayerA().getUser().getId())) {
-            notify = match.getPlayerB().getUser();
-        } else {
-            notify = match.getPlayerA().getUser();
-        }
-
-        notificationService.removeRemainingForMatch(matchId);
-
-        matchRepository.delete(match);
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            wsNotificationService.notify(mapper.writeValueAsString(Map.of("match_cancelled", matchId)), notify.getUsername());
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        matchService.cancelMatch(matchId, currentUser.getId());
 
         return "{}";
     }

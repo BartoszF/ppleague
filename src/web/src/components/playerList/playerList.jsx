@@ -25,10 +25,12 @@ class PlayerList extends React.Component {
   render() {
     return (
       <div className="playerList">
-        {this.props.players.map((player, index) => <PlayerListItem key={player.playerId}
-                                                                   public={this.props.public}
-                                                                   click={this.onClick.bind(this)}
-                                                                   player={player}/>)}
+        {this.props.players.map((player, index) => (
+          <PlayerListItem key={player.playerId}
+            public={this.props.public}
+            click={this.onClick.bind(this)}
+            player={player} />
+        ))}
       </div>
     );
   }

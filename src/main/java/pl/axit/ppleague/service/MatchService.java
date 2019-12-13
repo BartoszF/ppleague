@@ -8,6 +8,7 @@ import org.goochjs.glicko2.RatingPeriodResults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import pl.axit.ppleague.data.EventType;
 import pl.axit.ppleague.data.request.CreateMatchRequest;
 import pl.axit.ppleague.data.request.EndMatchRequest;
 import pl.axit.ppleague.data.response.*;
@@ -15,6 +16,7 @@ import pl.axit.ppleague.exception.MatchExistsException;
 import pl.axit.ppleague.model.Match;
 import pl.axit.ppleague.model.Notification;
 import pl.axit.ppleague.model.Player;
+import pl.axit.ppleague.model.User;
 import pl.axit.ppleague.repository.MatchRepository;
 import pl.axit.ppleague.repository.PagedMatchRepository;
 import pl.axit.ppleague.repository.PlayerRepository;
@@ -63,7 +65,8 @@ public class MatchService {
         return new GetMatchesResponse(matches);
     }
 
-    public MatchResponse getOngoingMatchForPlayer(Player player) {
+    public MatchResponse getOngoingMatchForPlayer(Long playerId) {
+        Player player = userRepository.findById(playerId).get().getPlayer();
         Optional<Match> match = matchRepository.findOngoingMatchForPlayer(player);
 
         if (match.isPresent())
@@ -97,8 +100,10 @@ public class MatchService {
     }
 
     @Transactional
-    public CreateMatchResponse createMatchFromInvitation(Long invitationId, UserPrincipal userPrincipal, Player player) throws MatchExistsException {
+    public CreateMatchResponse createMatchFromInvitation(Long invitationId, UserPrincipal userPrincipal, Long playerId) throws MatchExistsException {
         CreateMatchRequest request = new CreateMatchRequest();
+
+        Player player = userRepository.findById(playerId).get().getPlayer();
 
         Notification invitation = notificationService.find(invitationId).orElseThrow();
 
@@ -219,5 +224,53 @@ public class MatchService {
         });
 
         return matchesResponses;
+    }
+
+    public void createMatchNotification(Long id, Long playerBId) {
+        User actor = userRepository.getOne(id);
+        User notifier = playerRepository.getOne(playerBId).getUser();
+        notificationService.create(EventType.MATCH_INV, null, actor, notifier);
+    }
+
+    public void createMatchCancelation(Long matchId, Long actorId) {
+        User actor = userRepository.getOne(actorId);
+        Match match = matchRepository.getOne(matchId);
+        User notifier = null;
+        if (actor.getId().equals(match.getPlayerA().getUser().getId())) {
+            notifier = match.getPlayerB().getUser();
+        } else {
+            notifier = match.getPlayerA().getUser();
+        }
+        notificationService.create(EventType.MATCH_CANCEL, match.getId(), actor, notifier);
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            wsNotificationService.notify(mapper.writeValueAsString(Map.of("match_cancel", match.getId())), notifier.getUsername());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void cancelMatch(Long matchId, Long currentUser) {
+        Match match = matchRepository.getOne(matchId);
+
+        User notify = null;
+        if (currentUser.equals(match.getPlayerA().getUser().getId())) {
+            notify = match.getPlayerB().getUser();
+        } else {
+            notify = match.getPlayerA().getUser();
+        }
+
+        notificationService.removeRemainingForMatch(matchId);
+
+        matchRepository.delete(match);
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            wsNotificationService.notify(mapper.writeValueAsString(Map.of("match_cancelled", matchId)), notify.getUsername());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 }

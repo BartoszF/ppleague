@@ -29,7 +29,7 @@ public class PlayerController {
 
     @GetMapping
     public ResponseEntity<List<PlayerResponse>> getPlayers() {
-
+        //TODO: Do that in playerService
         List<Player> players = playerRepository.findAll();
         List<PlayerResponse> responses = new ArrayList<>();
 

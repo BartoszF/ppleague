@@ -10,9 +10,9 @@ export default class Player {
     @observable deviation = 0;
 
     constructor(id, name, rating, deviation) {
-        this.id = id;
-        this.name = name;
-        this.rating = rating;
-        this.deviation = deviation;
+      this.id = id;
+      this.name = name;
+      this.rating = rating;
+      this.deviation = deviation;
     }
 }

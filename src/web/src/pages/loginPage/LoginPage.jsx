@@ -15,14 +15,15 @@ class LoginPage extends React.Component {
   }
 
   handleSubmit(event) {
+    const { validateFields, onLogin } = this.props;
     event.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    validateFields((err, values) => {
       if (!err) {
         const loginRequest = { ...values };
         UserService.login(loginRequest)
           .then((response) => {
             localStorage.setItem(ACCESS_TOKEN, response.accessToken);
-            this.props.onLogin();
+            onLogin();
           })
           .catch((error) => {
             if (error.status === 401) {
