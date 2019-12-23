@@ -204,6 +204,7 @@ class App extends Component {
               this.setState({ wsFailed: false });
               this.clientRef.sendMessage('/app/register', JSON.stringify({ username: userStore.username }));
             }}
+            autoReconnect={false}
             onDisconnect={this.websocketConnectionFail.bind(this)}
             onConnectFailure={this.websocketConnectionFail.bind(this)}
             ref={(client) => {

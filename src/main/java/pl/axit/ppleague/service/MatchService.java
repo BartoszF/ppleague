@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.goochjs.glicko2.Rating;
 import org.goochjs.glicko2.RatingCalculator;
 import org.goochjs.glicko2.RatingPeriodResults;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -227,8 +228,9 @@ public class MatchService {
     }
 
     public void createMatchNotification(Long id, Long playerBId) {
-        User actor = userRepository.getOne(id);
+        User actor = (User) Hibernate.unproxy(userRepository.getOne(id));
         User notifier = playerRepository.getOne(playerBId).getUser();
+        System.out.println("CREATING NOTIFICATION FOR " + actor.getId() + " " + notifier.getId());
         notificationService.create(EventType.MATCH_INV, null, actor, notifier);
     }
 

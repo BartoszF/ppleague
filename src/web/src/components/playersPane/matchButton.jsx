@@ -17,7 +17,7 @@ class MatchButton extends React.Component {
     super(props);
     this.state = {
       aScore: 0,
-      bScore: 0
+      bScore: 0,
     };
 
     this.playerAScoreChange = this.playerAScoreChange.bind(this);
@@ -33,13 +33,12 @@ class MatchButton extends React.Component {
 
   isInvitation() {
     const { userStore } = this.props;
-    const { playerId } = this.props.playerStore.selectedPlayer;
-    return userStore
-      && userStore.matchInvitations.length > 0
+    const { selectedPlayer } = this.props.playerStore;
+    return selectedPlayer && userStore.matchInvitations.length > 0
       && userStore.matchInvitations.filter(
-        (value) => (value.notifier.player.playerId === playerId
+        (value) => (value.notifier.player.playerId === selectedPlayer.playerId
           && value.notifier.player.playerId !== this.props.userStore.player.playerId)
-          || (value.actor.player.playerId === playerId
+          || (value.actor.player.playerId === selectedPlayer.playerId
             && value.actor.player.playerId !== this.props.userStore.player.playerId),
                             ).length > 0;
   }
@@ -113,18 +112,21 @@ class MatchButton extends React.Component {
   }
 
   getNames() {
-    if (this.samePlayerAsMatch(this.props.playerStore.selectedPlayer.playerId) && this.props.matchStore.ongoingMatch && _.has(this.props.matchStore.ongoingMatch, 'playerA')) {
+    const { selectedPlayer } = this.props.playerStore;
+    const { ongoingMatch } = this.props.matchStore;
+    if (selectedPlayer && this.samePlayerAsMatch(selectedPlayer.playerId) && ongoingMatch && _.has(ongoingMatch, 'playerA')) {
       return (
         <div className="names">
-          <span>{this.props.matchStore.ongoingMatch.playerA.user.username}</span>
-          <span>{this.props.matchStore.ongoingMatch.playerB.user.username}</span>
+          <span>{ongoingMatch.playerA.user.username}</span>
+          <span>{ongoingMatch.playerB.user.username}</span>
         </div>
       );
     }
   }
 
   getInputs() {
-    if (this.samePlayerAsMatch(this.props.playerStore.selectedPlayer.playerId)) {
+    const { selectedPlayer } = this.props.playerStore;
+    if (selectedPlayer && this.samePlayerAsMatch(selectedPlayer.playerId)) {
       return (
         <div className="inputs">
           <InputNumber
@@ -145,7 +147,8 @@ class MatchButton extends React.Component {
   }
 
   getButtonText() {
-    if (this.samePlayerAsMatch(this.props.playerStore.selectedPlayer.playerId)) {
+    const { selectedPlayer } = this.props.playerStore;
+    if (selectedPlayer && this.samePlayerAsMatch(selectedPlayer.playerId)) {
       return 'END MATCH';
     }
 
@@ -157,6 +160,7 @@ class MatchButton extends React.Component {
   }
 
   render() {
+    const { selectedPlayer } = this.props.playerStore;
     return (
       <div className="matchButton">
         {this.getNames()}
@@ -165,8 +169,8 @@ class MatchButton extends React.Component {
           onClick={this.onClick.bind(this)}
           className={
             `button ${
-              this.samePlayerAsMatch(
-                this.props.playerStore.selectedPlayer.playerId,
+              selectedPlayer && this.samePlayerAsMatch(
+                selectedPlayer.playerId,
               )
                 ? 'endMatch'
                 : 'createMatch'}`

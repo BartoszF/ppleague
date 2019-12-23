@@ -62,6 +62,8 @@ public class NotificationService {
 
         notification = notificationRepository.save(notification);
 
+        System.out.println("CREATED NOTIFICATION : " + notification.getId());
+
         response.setId(notification.getId());
 
         ObjectMapper mapper = new ObjectMapper();

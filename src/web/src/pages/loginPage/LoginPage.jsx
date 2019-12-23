@@ -15,7 +15,8 @@ class LoginPage extends React.Component {
   }
 
   handleSubmit(event) {
-    const { validateFields, onLogin } = this.props;
+    const { form, onLogin } = this.props;
+    const { validateFields } = form;
     event.preventDefault();
     validateFields((err, values) => {
       if (!err) {
@@ -71,7 +72,7 @@ class LoginPage extends React.Component {
           {getFieldDecorator('password', {
             rules: [{
               required: true,
-              message: 'Please input your Password!'
+              message: 'Please input your Password!',
             }],
           })(
             <Input

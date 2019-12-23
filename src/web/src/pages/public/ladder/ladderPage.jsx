@@ -24,7 +24,7 @@ class PublicLadderPage extends React.Component {
           <PlayerList players={this.props.playerStore.players} public/>
         </Col>
         <Col className="playerPanes" style={{ height: '100%' }} span={14}>
-          <PlayerPane player={this.props.playerStore.selectedPlayer} other public/>
+          <PlayerPane player={this.props.playerStore.selectedPlayer} other isPublic/>
         </Col>
       </div>
     );

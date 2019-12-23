@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import './playerPane.css';
 import _ from 'lodash';
 import { Avatar, Button, Icon, notification, } from 'antd';
@@ -15,7 +16,10 @@ import MatchService from '../../services/MatchService';
 @observer
 class PlayerPane extends React.Component {
   matchButton() {
-    if (!this.props.public && this.props.other) return (<MatchButton/>);
+    if (!this.props.isPublic && _.has(this.props, 'other') && this.props.other === true) {
+      return (
+        <MatchButton/>);
+    }
   }
 
   cancelMatch() {
@@ -35,16 +39,24 @@ class PlayerPane extends React.Component {
   }
 
   cancelButton() {
-    if (!this.props.public && this.props.other && this.samePlayerAsMatch(this.props.player.playerId)) {
-      return (<div title="Cancel match" className="cancelMatchButton"><Button
-        onClick={this.cancelMatch.bind(this)} type="link"><Icon type="close"/></Button></div>);
+    if (!this.props.isPublic && this.props.other && this.samePlayerAsMatch(this.props.player.playerId)) {
+      return (
+        <div title="Cancel match" className="cancelMatchButton">
+          <Button
+            onClick={this.cancelMatch.bind(this)}
+            type="link"
+          >
+            <Icon type="close"/>
+          </Button>
+        </div>
+      );
     }
   }
 
   samePlayerAsMatch(playerId) {
     return this.props.matchStore.ongoingMatch
-                    && this.props.matchStore.ongoingMatch.playerB
-                    && (this.props.matchStore.ongoingMatch.playerB.id === playerId || this.props.matchStore.ongoingMatch.playerA.id === playerId);
+      && this.props.matchStore.ongoingMatch.playerB
+      && (this.props.matchStore.ongoingMatch.playerB.id === playerId || this.props.matchStore.ongoingMatch.playerA.id === playerId);
   }
 
   getMatches() {
@@ -61,15 +73,19 @@ class PlayerPane extends React.Component {
   }
 
   publicMatchHistory() {
-    if (!this.props.public) return;
+    const { isPublic, player } = this.props;
+
+    if (!isPublic) return;
 
     return (
-      <MatchHistory player={this.props.player} isLoading={false}/>
+      <MatchHistory player={player} isLoading={false}/>
     );
   }
 
   render() {
-    if (_.isEmpty(this.props.player)) {
+    const { player } = this.props;
+
+    if (_.isEmpty(player)) {
       return <div className="playerPane"/>;
     }
     return (
@@ -79,13 +95,13 @@ class PlayerPane extends React.Component {
         </div>
         <div className="playerName">
           #
-          {this.props.player.standing}
-          {this.props.player.name}
+          {`${player.standing} `}
+          {player.name}
         </div>
         <div className="playerRating">
           <h2>
             Rating:
-            {parseFloat(this.props.player.rating)
+            {parseFloat(player.rating)
               .toFixed(2)}
           </h2>
           {this.getMatches()}
@@ -98,5 +114,18 @@ class PlayerPane extends React.Component {
     );
   }
 }
+
+PlayerPane.propTypes = {
+  player: PropTypes.objectOf(PropTypes.object),
+  isPublic: PropTypes.bool,
+  other: PropTypes.objectOf(PropTypes.object),
+  matchStore: PropTypes.objectOf(PropTypes.object).isRequired,
+};
+
+PlayerPane.defaultProps = {
+  isPublic: false,
+  other: {},
+  player: {},
+};
 
 export default PlayerPane;

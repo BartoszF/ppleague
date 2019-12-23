@@ -31,7 +31,7 @@ class LadderPage extends React.Component {
         </Col>
         <Col className="playerPanes" style={{ height: '100%' }} span={14}>
           <PlayerPane player={userPlayer} />
-          <PlayerPane player={selectedPlayer} other />
+          <PlayerPane player={selectedPlayer} other={true}/>
         </Col>
       </div>
     );
@@ -39,7 +39,7 @@ class LadderPage extends React.Component {
 }
 
 LadderPage.propTypes = {
-  playerStore: PropTypes.objectOf(PropTypes.object()).isRequired,
+  playerStore: PropTypes.objectOf(PropTypes.object).isRequired,
 };
 
 export default LadderPage;
