@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import './AppHeader.css';
-import { Badge, Dropdown, Icon, Layout, Menu, } from 'antd';
+import {
+  Badge, Dropdown, Icon, Layout, Menu
+} from 'antd';
 import { inject, observer } from 'mobx-react';
 
 import Notification from './notification';
@@ -17,7 +19,6 @@ class AppHeader extends Component {
   }
 
   handleMenuClick({ key }) {
-    console.log(key);
     if (key === 'logout') {
       this.props.onLogout();
     }
@@ -29,7 +30,7 @@ class AppHeader extends Component {
       menuItems = [
         <Menu.Item key="/">
           <Link to="/">
-            <Icon type="home" className="noselect nav-icon"/>
+            <Icon type="home" className="noselect nav-icon" />
           </Link>
         </Menu.Item>,
         <Menu.Item key="/notifications" className="noselect notifications-menu">

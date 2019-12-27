@@ -33,12 +33,4 @@ class PublicLadderPage extends React.Component {
   }
 }
 
-// PublicLadderPage.propTypes = {
-//   playerStore: PropTypes.objectOf(PropTypes.object),
-// };
-
-// PublicLadderPage.defaultProps = {
-//   playerStore: {},
-// };
-
 export default PublicLadderPage;

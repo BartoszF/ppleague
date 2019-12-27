@@ -61,7 +61,6 @@ class App extends Component {
 
 
     window.addEventListener('beforeunload', (ev) => {
-      console.log("Unmounting " + this.clientRef)
       this.clientRef.disconnect();
     });
   }
@@ -117,15 +116,9 @@ class App extends Component {
         });
 
         if (!history.location.pathname.includes('/public/')) history.push('/');
-
-        this.clientRef.sendMessage('/app/register', JSON.stringify({ username: userStore.username }));
-        this.setState({ wsFailed: false, wsRegistered: true });
       })
       .catch((error) => {
-        notification.error({
-          message: APP_NAME,
-          error,
-        });
+        console.log(error);
         this.setState({
           isLoading: false,
         });

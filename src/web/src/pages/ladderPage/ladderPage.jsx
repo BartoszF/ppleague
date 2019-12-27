@@ -7,11 +7,13 @@ import PlayerService from '../../services/PlayerService';
 
 import './ladderPage.css';
 import PlayerPane from '../../components/playersPane/playerPane';
+import MatchService from '../../services/MatchService';
+import OwnMatchHistory from '../../components/matchHistory/ownMatchHistory';
 
 @inject('playerStore') @inject('matchStore') @inject('userStore') @observer
 class LadderPage extends React.Component {
   componentDidMount() {
-    const { playerStore } = this.props;
+    const { playerStore, userStore } = this.props;
 
     playerStore.selectPlayer(null);
     PlayerService.getPlayers()
@@ -33,17 +35,13 @@ class LadderPage extends React.Component {
           <PlayerPane player={userPlayer} />
           <PlayerPane player={selectedPlayer} other={true} />
         </Col>
+        <Col className="historyContent" style={{ height: '100%' }} span={5}>
+          <div className="historyHeader"><span>Your last matches against:</span></div>
+          <OwnMatchHistory />
+        </Col>
       </div>
     );
   }
 }
-
-LadderPage.propTypes = {
-  playerStore: PropTypes.objectOf(PropTypes.object),
-};
-
-LadderPage.defaultProps = {
-  playerStore: {},
-};
 
 export default LadderPage;

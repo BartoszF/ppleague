@@ -52,6 +52,7 @@ class MatchButton extends React.Component {
         </div>
       );
     }
+    return (<div></div>);
   }
 
 
@@ -198,19 +199,5 @@ class MatchButton extends React.Component {
     );
   }
 }
-
-MatchButton.propTypes = {
-  player: PropTypes.objectOf(PropTypes.object),
-  playerStore: PropTypes.objectOf(PropTypes.object),
-  userStore: PropTypes.objectOf(PropTypes.object),
-  matchStore: PropTypes.objectOf(PropTypes.object),
-};
-
-// MatchButton.defaultProps = {
-//   player: {},
-//   playerStore: {},
-//   userStore: {},
-//   matchStore: {},
-// };
 
 export default MatchButton;

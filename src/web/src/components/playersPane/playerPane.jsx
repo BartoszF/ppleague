@@ -128,18 +128,4 @@ class PlayerPane extends React.Component {
   }
 }
 
-PlayerPane.propTypes = {
-  player: PropTypes.objectOf(PropTypes.object),
-  isPublic: PropTypes.bool,
-  other: PropTypes.bool,
-  matchStore: PropTypes.objectOf(PropTypes.object),
-};
-
-PlayerPane.defaultProps = {
-  isPublic: false,
-  other: false,
-  player: {},
-  matchStore: {},
-};
-
 export default PlayerPane;
