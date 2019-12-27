@@ -25,7 +25,7 @@ class OwnMatchHistory extends React.Component {
   showMatches() {
     const { userStore } = this.props;
     let { matches } = this.state;
-    matches = matches.slice(0, 20);
+    matches = matches.reverse().slice(0, 20);
     const rows = matches.map((item, key) => {
       const match = item;
       let myScore = 0;
