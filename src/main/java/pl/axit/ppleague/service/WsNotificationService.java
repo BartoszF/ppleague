@@ -22,7 +22,9 @@ public class WsNotificationService {
 
     public void notify(String message, String userName) {
         String sessionId = getUserCache().get(userName);
-        simpMessagingTemplate.convertAndSendToUser(sessionId, "/topic/notify", message, createHeaders(sessionId));
+
+        if (sessionId != null)
+            simpMessagingTemplate.convertAndSendToUser(sessionId, "/topic/notify", message, createHeaders(sessionId));
     }
 
     private MessageHeaders createHeaders(String sessionId) {

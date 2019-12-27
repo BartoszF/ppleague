@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Col } from 'antd';
-import { inject, observer } from 'mobx-react';
+import { inject, observer, PropTypes } from 'mobx-react';
 import '../../ladderPage/ladderPage.css';
 import PlayerPane from '../../../components/playersPane/playerPane';
 import PlayerList from '../../../components/playerList/playerList';
@@ -18,15 +18,27 @@ class PublicLadderPage extends React.Component {
   }
 
   render() {
+    const { playerStore } = this.props;
+    const { players, selectedPlayer } = playerStore;
     return (
       <div className="ladderContent" style={{ height: '100%' }}>
         <Col style={{ height: '100%' }} span={5}>
-          <PlayerList players={this.props.playerStore.players} public/>
+          <PlayerList players={players} public />
         </Col>
         <Col className="playerPanes" style={{ height: '100%' }} span={14}>
-          <PlayerPane player={this.props.playerStore.selectedPlayer} other isPublic/>
+          <PlayerPane player={selectedPlayer} other isPublic />
         </Col>
       </div>
     );
   }
-} export default PublicLadderPage;
+}
+
+// PublicLadderPage.propTypes = {
+//   playerStore: PropTypes.objectOf(PropTypes.object),
+// };
+
+// PublicLadderPage.defaultProps = {
+//   playerStore: {},
+// };
+
+export default PublicLadderPage;

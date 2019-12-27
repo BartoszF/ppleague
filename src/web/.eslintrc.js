@@ -22,5 +22,5 @@ module.exports = {
     'react',
   ],
   rules: {},
-  parser: 'babel-eslint'
+  parser: 'babel-eslint',
 };

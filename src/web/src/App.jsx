@@ -52,80 +52,25 @@ class App extends Component {
     });
   }
 
-  loadCurrentUser() {
-    this.setState({
-      isLoading: true,
-    });
-
-    UserService.getCurrentUser()
-      .then((response) => {
-        userStore.setUser(response);
-        playerStore.setUserPlayer(response.player);
-
-        matchStore.getOngoingMatch();
-
-        userStore.getNotifications();
-
-        userStore.getMatchInvitations();
-
-        this.setState({
-          isLoading: false,
-        });
-
-        if (!history.location.pathname.includes('/public/')) history.push('/');
-      })
-      .catch((error) => {
-        console.log(error);
-        this.setState({
-          isLoading: false,
-        });
-      });
-  }
-
   componentDidMount() {
     if (!history.location.pathname.includes('/public/') && Notification.permission !== 'denied') {
       Notification.requestPermission();
     }
 
     this.loadCurrentUser();
-  }
 
 
-  handleLogout(
-    redirectTo = '/',
-    notificationType = 'success',
-    description = 'You\'re successfully logged out.',
-  ) {
-    localStorage.removeItem(ACCESS_TOKEN);
-
-    userStore.isAuthenticated = false;
-    userStore.id = 0;
-    userStore.username = '';
-
-    history.push(redirectTo);
-
-    notification[notificationType]({
-      message: APP_NAME,
-      description,
+    window.addEventListener('beforeunload', (ev) => {
+      console.log("Unmounting " + this.clientRef)
+      this.clientRef.disconnect();
     });
-  }
-
-  /*
-   This method is called by the Login component after successful login
-   so that we can load the logged-in user details and set the currentUser &
-   isAuthenticated state, which other components will use to render their JSX
-  */
-  handleLogin() {
-    notification.success({
-      message: APP_NAME,
-      description: 'You\'re successfully logged in.',
-    });
-    this.loadCurrentUser();
   }
 
   getSwitch(props) {
-    if (this.state.isLoading) {
-      return <LoadingIndicator/>;
+    const { isLoading } = this.state;
+
+    if (isLoading) {
+      return <LoadingIndicator />;
     }
     return (
       <Switch>
@@ -151,7 +96,75 @@ class App extends Component {
     );
   }
 
-  handleWebsocket(msg) {
+  loadCurrentUser = () => {
+    this.setState({
+      isLoading: true,
+    });
+
+    UserService.getCurrentUser()
+      .then((response) => {
+        userStore.setUser(response);
+        playerStore.setUserPlayer(response.player);
+
+        matchStore.getOngoingMatch();
+
+        userStore.getNotifications();
+
+        userStore.getMatchInvitations();
+
+        this.setState({
+          isLoading: false,
+        });
+
+        if (!history.location.pathname.includes('/public/')) history.push('/');
+
+        this.clientRef.sendMessage('/app/register', JSON.stringify({ username: userStore.username }));
+        this.setState({ wsFailed: false, wsRegistered: true });
+      })
+      .catch((error) => {
+        notification.error({
+          message: APP_NAME,
+          error,
+        });
+        this.setState({
+          isLoading: false,
+        });
+      });
+  }
+
+  handleLogout = (
+    redirectTo = '/',
+    notificationType = 'success',
+    description = 'You\'re successfully logged out.',
+  ) => {
+    localStorage.removeItem(ACCESS_TOKEN);
+
+    userStore.isAuthenticated = false;
+    userStore.id = 0;
+    userStore.username = '';
+
+    history.push(redirectTo);
+
+    notification[notificationType]({
+      message: APP_NAME,
+      description,
+    });
+  }
+
+  /*
+   This method is called by the Login component after successful login
+   so that we can load the logged-in user details and set the currentUser &
+   isAuthenticated state, which other components will use to render their JSX
+  */
+  handleLogin = () => {
+    notification.success({
+      message: APP_NAME,
+      description: 'You\'re successfully logged in.',
+    });
+    this.loadCurrentUser();
+  }
+
+  handleWebsocket = (msg) => {
     if (_.has(msg, 'notification')) {
       const notif = userStore.addNotification(msg.notification);
 
@@ -201,8 +214,8 @@ class App extends Component {
               this.handleWebsocket(msg);
             }}
             onConnect={() => {
-              this.setState({ wsFailed: false });
               this.clientRef.sendMessage('/app/register', JSON.stringify({ username: userStore.username }));
+              this.setState({ wsFailed: false, wsRegistered: true });
             }}
             autoReconnect={false}
             onDisconnect={this.websocketConnectionFail.bind(this)}
@@ -217,7 +230,7 @@ class App extends Component {
             </div>
           ) : ''}
           <Router basename="/" history={history}>
-            <AppHeader onLogout={this.handleLogout}/>
+            <AppHeader onLogout={this.handleLogout} />
             <Content className="app-content">
               <div className="container">
                 {this.getSwitch()}
