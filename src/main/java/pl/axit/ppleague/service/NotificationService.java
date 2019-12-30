@@ -25,12 +25,14 @@ public class NotificationService {
     private final WsNotificationService wsNotificationService;
     private final UserRepository userRepository;
     private final PlayerRepository playerRepository;
+    private final EmailServiceImpl emailService;
 
-    public NotificationService(NotificationRepository notificationRepository, WsNotificationService wsNotificationService, UserRepository userRepository, PlayerRepository playerRepository) {
+    public NotificationService(NotificationRepository notificationRepository, WsNotificationService wsNotificationService, UserRepository userRepository, PlayerRepository playerRepository, EmailServiceImpl emailService) {
         this.notificationRepository = notificationRepository;
         this.wsNotificationService = wsNotificationService;
         this.userRepository = userRepository;
         this.playerRepository = playerRepository;
+        this.emailService = emailService;
     }
 
     public Optional<Notification> find(Long notificationId) {
@@ -62,9 +64,9 @@ public class NotificationService {
 
         notification = notificationRepository.save(notification);
 
-        System.out.println("CREATED NOTIFICATION : " + notification.getId());
-
         response.setId(notification.getId());
+
+        //emailService.sendMail("bartosz.felis@siemens-logistics.com","TEST","TEST");
 
         ObjectMapper mapper = new ObjectMapper();
 
