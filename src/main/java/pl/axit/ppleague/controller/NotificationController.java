@@ -28,7 +28,7 @@ public class NotificationController {
 
     @GetMapping("/matchInvitation")
     public NotificationsResponse getInvitationForPlayerMatch(@CurrentUser UserPrincipal userPrincipal) {
-        return NotificationsResponse.from(notificationService.getInvitationForPlayer(userPrincipal.getId()));
+        return NotificationsResponse.from(notificationService.getInvitationForUser(userPrincipal.getId()));
     }
 
 }
