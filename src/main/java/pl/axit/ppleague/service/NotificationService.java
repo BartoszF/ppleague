@@ -44,7 +44,7 @@ public class NotificationService {
     public Notification create(EventType eventType, Long eventId, User actor, User notifier) {
 
         if (notificationRepository.findByNotifierAndActorAndEventType(notifier, actor, eventType.getId()).isPresent() || notificationRepository.findByNotifierAndActorAndEventType(actor, notifier, eventType.getId()).isPresent()) {
-            throw new EntityExistsException("Invitation already exists");
+            throw new EntityExistsException("Notification already exists");
         }
 
         String notifierUsername = notifier.getUsername();
@@ -61,8 +61,6 @@ public class NotificationService {
         NotificationResponse response = NotificationResponse.from(notification);
 
         notification = notificationRepository.save(notification);
-
-        System.out.println("CREATED NOTIFICATION : " + notification.getId());
 
         response.setId(notification.getId());
 
@@ -97,7 +95,7 @@ public class NotificationService {
         throw new Exception("Notification don't belongs to user");
     }
 
-    public List<Notification> getInvitationForPlayer(Long userId) {
+    public List<Notification> getInvitationForUser(Long userId) {
         User user = userRepository.getOne(userId);
 
         return notificationRepository.findByEventTypeAndNotifierOrActor(EventType.MATCH_INV.getId(), user, user);

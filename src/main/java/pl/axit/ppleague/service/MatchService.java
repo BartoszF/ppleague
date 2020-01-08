@@ -81,7 +81,10 @@ public class MatchService {
 
         List<Match> matches = matchRepository.findMatchByPlayerAOrPlayerB(player, player);
 
-        matches.forEach(match -> matchResponses.add(MatchResponse.from(match)));
+        matches.forEach(match -> {
+            if (!match.getPlayerAScore().equals(0) || !match.getPlayerBScore().equals(0))
+                matchResponses.add(MatchResponse.from(match));
+        });
 
         return new GetMatchesResponse(matchResponses);
     }
@@ -91,7 +94,10 @@ public class MatchService {
 
         Page<Match> matches = pagedMatchRepository.getAllByPlayerAOrPlayerB(player, player, PageRequest.of(page, 10000)); //such huge number is temporary
 
-        matches.forEach(match -> matchResponses.add(MatchResponse.from(match)));
+        matches.forEach(match -> {
+            if (!match.getPlayerAScore().equals(0) || !match.getPlayerBScore().equals(0))
+                matchResponses.add(MatchResponse.from(match));
+        });
 
         return new GetPagedMatchesResponse(matchResponses, matches.hasNext());
     }
@@ -111,7 +117,7 @@ public class MatchService {
         request.setPlayerAId(invitation.getActor().getId());
         request.setPlayerBId(invitation.getNotifier().getId());
 
-        CreateMatchResponse response = createMatch(request, userPrincipal);
+        CreateMatchResponse response = createMatch(request, userPrincipal, playerId);
 
         notificationService.delete(invitation);
 
@@ -128,10 +134,14 @@ public class MatchService {
     }
 
     @Transactional
-    public CreateMatchResponse createMatch(CreateMatchRequest request, UserPrincipal userPrincipal) throws MatchExistsException {
+    public CreateMatchResponse createMatch(CreateMatchRequest request, UserPrincipal userPrincipal, Long playerId) throws MatchExistsException {
         Long userId = userPrincipal.getId();
 
         if (matchRepository.findOngoingMatchForPlayer(userRepository.findById(userId).get().getPlayer()).isPresent()) {
+            throw new MatchExistsException();
+        }
+
+        if (matchRepository.findOngoingMatchForPlayer(playerRepository.getOne(playerId)).isPresent()) {
             throw new MatchExistsException();
         }
 
@@ -230,7 +240,6 @@ public class MatchService {
     public void createMatchNotification(Long id, Long playerBId) {
         User actor = (User) Hibernate.unproxy(userRepository.getOne(id));
         User notifier = playerRepository.getOne(playerBId).getUser();
-        System.out.println("CREATING NOTIFICATION FOR " + actor.getId() + " " + notifier.getId());
         notificationService.create(EventType.MATCH_INV, null, actor, notifier);
     }
 
