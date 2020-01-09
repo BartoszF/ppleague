@@ -4,3 +4,8 @@
     overflow-y: scroll;
     background-color: #e0e0e0;
 }
+
+.playerListContainer {
+    height: 100%;
+    overflow: hidden;
+}
