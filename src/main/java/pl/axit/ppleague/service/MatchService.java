@@ -83,7 +83,7 @@ public class MatchService {
         List<MatchResponse> matchResponses = new ArrayList<>();
 
         List<Match> matches = matchRepository.findMatchByPlayerAOrPlayerB(player, player);
-        matches.sort((e1, e2) -> e2.getDate().compareTo(e1.getDate()));
+        matches.sort(Comparator.comparing(Match::getDate));
 
         matches.forEach(match -> {
             if (!match.getPlayerAScore().equals(0) || !match.getPlayerBScore().equals(0))
