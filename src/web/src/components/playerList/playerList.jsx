@@ -54,7 +54,7 @@ class PlayerList extends React.Component {
     const { players } = this.props;
     return (
       <div className="playerListContainer">
-        <Input onChange={this.onSearchChange} placeholder='Username'/>
+        <Input onChange={this.onSearchChange} placeholder='Search (min 3 chars)'/>
         <div className="playerList">
           {players.filter(this.filterPlayers.bind(this))
             .map((player, index) => (
