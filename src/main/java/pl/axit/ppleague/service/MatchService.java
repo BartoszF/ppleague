@@ -47,7 +47,9 @@ public class MatchService {
 
     private final WsNotificationService wsNotificationService;
 
-    public MatchService(MatchRepository matchRepository, PagedMatchRepository pagedMatchRepository, PlayerRepository playerRepository, UserRepository userRepository, RatingCalculator ratingCalculator, NotificationService notificationService, RatingPeriodResults results, WsNotificationService wsNotificationService) {
+    private final EmailServiceImpl emailService;
+
+    public MatchService(MatchRepository matchRepository, PagedMatchRepository pagedMatchRepository, PlayerRepository playerRepository, UserRepository userRepository, RatingCalculator ratingCalculator, NotificationService notificationService, RatingPeriodResults results, WsNotificationService wsNotificationService, EmailServiceImpl emailService) {
         this.matchRepository = matchRepository;
         this.pagedMatchRepository = pagedMatchRepository;
         this.playerRepository = playerRepository;
@@ -56,6 +58,7 @@ public class MatchService {
         this.notificationService = notificationService;
         this.results = results;
         this.wsNotificationService = wsNotificationService;
+        this.emailService = emailService;
     }
 
     public GetMatchesResponse getMatches() {
@@ -125,6 +128,8 @@ public class MatchService {
             ObjectMapper mapper = new ObjectMapper();
             wsNotificationService.notify(mapper.writeValueAsString(Map.of("ongoing_match", "true")), invitation.getActor().getUsername());
             wsNotificationService.notify(mapper.writeValueAsString(Map.of("ongoing_match", "true")), invitation.getNotifier().getUsername());
+            emailService.sendMail(userPrincipal.getId().equals(invitation.getActor().getId()) ? invitation.getNotifier().getEmail() : invitation.getActor().getEmail(), "Match created",
+                    "Match " + invitation.getActor().getUsername() + " vs " + invitation.getNotifier().getUsername() + " created!");
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
@@ -159,7 +164,6 @@ public class MatchService {
         match.setDate(new Timestamp(new Date().getTime()));
 
         match = matchRepository.save(match);
-        //test
 
         return CreateMatchResponse.builder().id(match.getId()).playerA(PlayerResponse.from(playerA)).playerB(PlayerResponse.from(playerB)).build();
     }
@@ -241,6 +245,7 @@ public class MatchService {
         User actor = (User) Hibernate.unproxy(userRepository.getOne(id));
         User notifier = playerRepository.getOne(playerBId).getUser();
         notificationService.create(EventType.MATCH_INV, null, actor, notifier);
+        emailService.sendMail(notifier.getEmail(), "New invitation", actor.getUsername() + " invited you for a match!");
     }
 
     public void createMatchCancelation(Long matchId, Long actorId) {
@@ -253,6 +258,7 @@ public class MatchService {
             notifier = match.getPlayerA().getUser();
         }
         notificationService.create(EventType.MATCH_CANCEL, match.getId(), actor, notifier);
+        emailService.sendMail(notifier.getEmail(), "New invitation", actor.getUsername() + " wants to cancel a match with you.");
 
         try {
             ObjectMapper mapper = new ObjectMapper();
