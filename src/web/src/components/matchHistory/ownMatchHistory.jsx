@@ -1,37 +1,60 @@
-import * as React from 'react';
-import { inject, observer } from 'mobx-react';
-import './matchHistory.css';
-import MatchService from '../../services/MatchService';
-import LoadingIndicator from '../common/LoadingIndicator';
+import * as React from "react";
+import { inject, observer } from "mobx-react";
+import "./matchHistory.css";
+import MatchService from "../../services/MatchService";
+import LoadingIndicator from "../common/LoadingIndicator";
 
-@inject('matchStore') @inject('playerStore') @inject('userStore') @observer
+import _ from "lodash";
+
+@inject("matchStore")
+@inject("playerStore")
+@inject("userStore")
+@observer
 class OwnMatchHistory extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       isLoading: true,
-      matches: [],
+      matches: []
     };
   }
 
   componentDidMount() {
-    const { userStore } = this.props;
-    MatchService.getMatchByPlayer(userStore.player).then((resp) => {
-      this.setState({ matches: resp.matches, isLoading: false });
-    });
+    const { player } = this.props;
+
+    if (!_.isEmpty(player)) {
+      MatchService.getMatchByPlayer(player).then(resp => {
+        this.setState({ matches: resp.matches, isLoading: false });
+      });
+    } else {
+      this.setState({ isLoading: false });
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.player !== prevProps.player) {
+      const { player } = this.props;
+
+      if (!_.isEmpty(player)) {
+        MatchService.getMatchByPlayer(player).then(resp => {
+          this.setState({ matches: resp.matches, isLoading: false });
+        });
+      }
+    }
   }
 
   showMatches() {
-    const { userStore } = this.props;
+    const { playerStore, player } = this.props;
     let { matches } = this.state;
-    matches = matches.reverse().slice(0, 20);
+    const thisPlayer = this.props.player;
+    matches = matches.reverse().slice(0, 12);
     const rows = matches.map((item, key) => {
       const match = item;
       let myScore = 0;
       let otherScore = 0;
-      let otherName = '';
-      if (match.playerA.id === userStore.player.playerId) {
+      let otherName = "";
+      if (match.playerA.id === thisPlayer.playerId) {
         myScore = match.playerAScore;
         otherScore = match.playerBScore;
         otherName = match.playerB.user.username;
@@ -44,7 +67,7 @@ class OwnMatchHistory extends React.Component {
       return (
         <div key={item.id} className="matchRow">
           <span className="myScore">{myScore}</span>
-        :
+          <span> : </span>
           <span className="otherScore">{otherScore}</span>
           <span className="otherName">{otherName}</span>
         </div>
@@ -57,10 +80,16 @@ class OwnMatchHistory extends React.Component {
   render() {
     const { isLoading } = this.state;
     if (isLoading) {
-      return (<LoadingIndicator />);
+      return <LoadingIndicator />;
     }
+
     return (
-      <div>{this.showMatches()}</div>
+      <div className={"historyPane"}>
+        <div className="historyHeader">
+          <span>Last matches:</span>
+        </div>
+        {this.showMatches()}
+      </div>
     );
   }
 }

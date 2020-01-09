@@ -3,7 +3,7 @@
     width:100%;
     position: relative;
     border-bottom: 1px solid rgba(175, 175, 175, 0.5);
-    height: 32px;
+    height: 33px;
     line-height:32px;
 }
 
@@ -21,4 +21,9 @@
     margin-right: 15px;
     right: 0;
     position: absolute;
+}
+
+.historyPane {
+    height: 50%;
+    overflow:auto;
 }
