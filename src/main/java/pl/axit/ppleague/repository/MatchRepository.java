@@ -12,6 +12,6 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
 
     List<Match> findMatchByPlayerAOrPlayerB(Player playerA, Player playerB);
 
-    @Query("select m from Match m where m.playerAScore = 0 and m.playerBScore = 0 and (m.playerA = ?1 or m.playerB = ?1) order by date desc")
+    @Query("select m from Match m where m.playerAScore = 0 and m.playerBScore = 0 and (m.playerA = ?1 or m.playerB = ?1)")
     Optional<Match> findOngoingMatchForPlayer(Player player);
 }
