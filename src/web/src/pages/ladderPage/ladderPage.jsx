@@ -33,7 +33,7 @@ class LadderPage extends React.Component {
         </Col>
         <Col className="playerPanes" style={{ height: '100%' }} span={14}>
           <PlayerPane player={userPlayer} />
-          <PlayerPane player={selectedPlayer} other={true} />
+          <PlayerPane player={selectedPlayer} other />
         </Col>
         <Col className="historyContent" style={{ height: '100%' }} span={5}>
           <OwnMatchHistory player={userPlayer} />

@@ -1,11 +1,10 @@
 
 .playerList {
     height:100%;
-    overflow-y: scroll;
-    background-color: #e0e0e0;
 }
 
 .playerListContainer {
     height: 100%;
-    overflow: hidden;
+    overflow-y: scroll;
+    background-color: #e0e0e0;
 }
