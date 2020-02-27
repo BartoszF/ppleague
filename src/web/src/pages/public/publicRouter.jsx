@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Switch, useRouteMatch, } from 'react-router-dom';
 
 import ProfilePage from '../profile/profilePage';
-import PublicLadderPage from './ladder/ladderPage';
+import { PublicLadderPage } from './ladder/ladderPage';
 
 
 function PublicRouter() {
@@ -17,4 +17,6 @@ function PublicRouter() {
       <Route path={`${url}/ladder`} component={PublicLadderPage}/>
     </Switch>
   );
-} export default PublicRouter;
+}
+
+export default PublicRouter;

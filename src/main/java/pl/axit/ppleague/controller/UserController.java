@@ -1,6 +1,7 @@
 package pl.axit.ppleague.controller;
 
 import org.goochjs.glicko2.RatingCalculator;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.axit.ppleague.data.request.CreateUserRequest;
 import pl.axit.ppleague.data.response.NotificationsResponse;
@@ -14,6 +15,8 @@ import pl.axit.ppleague.security.CurrentUser;
 import pl.axit.ppleague.security.UserPrincipal;
 import pl.axit.ppleague.service.NotificationService;
 import pl.axit.ppleague.service.UserService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -31,6 +34,11 @@ public class UserController {
         this.userRepository = userRepository;
         this.notificationService = notificationService;
         this.playerRepository = playerRepository;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<User>> getAll() {
+        return ResponseEntity.ok(userRepository.findAll());
     }
 
     @PostMapping

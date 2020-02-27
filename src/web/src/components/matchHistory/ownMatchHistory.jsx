@@ -1,14 +1,14 @@
-import * as React from "react";
-import { inject, observer } from "mobx-react";
-import "./matchHistory.css";
-import MatchService from "../../services/MatchService";
-import LoadingIndicator from "../common/LoadingIndicator";
+import * as React from 'react';
+import { inject, observer } from 'mobx-react';
+import './matchHistory.css';
+import _ from 'lodash';
+import MatchService from '../../services/MatchService';
+import LoadingIndicator from '../common/LoadingIndicator';
 
-import _ from "lodash";
 
-@inject("matchStore")
-@inject("playerStore")
-@inject("userStore")
+@inject('matchStore')
+@inject('playerStore')
+@inject('userStore')
 @observer
 class OwnMatchHistory extends React.Component {
   constructor(props) {
@@ -16,7 +16,7 @@ class OwnMatchHistory extends React.Component {
 
     this.state = {
       isLoading: true,
-      matches: []
+      matches: [],
     };
   }
 
@@ -24,7 +24,8 @@ class OwnMatchHistory extends React.Component {
     const { player } = this.props;
 
     if (!_.isEmpty(player)) {
-      MatchService.getMatchByPlayer(player).then(resp => {
+      MatchService.getMatchByPlayer(player)
+        .then((resp) => {
         this.setState({ matches: resp.matches, isLoading: false });
       });
     } else {
@@ -37,7 +38,8 @@ class OwnMatchHistory extends React.Component {
       const { player } = this.props;
 
       if (!_.isEmpty(player)) {
-        MatchService.getMatchByPlayer(player).then(resp => {
+        MatchService.getMatchByPlayer(player)
+          .then((resp) => {
           this.setState({ matches: resp.matches, isLoading: false });
         });
       }
@@ -53,7 +55,7 @@ class OwnMatchHistory extends React.Component {
       const match = item;
       let myScore = 0;
       let otherScore = 0;
-      let otherName = "";
+      let otherName = '';
       if (match.playerA.id === thisPlayer.playerId) {
         myScore = match.playerAScore;
         otherScore = match.playerBScore;
@@ -84,7 +86,7 @@ class OwnMatchHistory extends React.Component {
     }
 
     return (
-      <div className={"historyPane"}>
+      <div className="historyPane">
         <div className="historyHeader">
           <span>Last matches:</span>
         </div>

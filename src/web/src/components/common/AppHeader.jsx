@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import './AppHeader.css';
-import {
-  Badge, Dropdown, Icon, Layout, Menu
-} from 'antd';
+import { Badge, Dropdown, Icon, Layout, Menu, } from 'antd';
 import { inject, observer } from 'mobx-react';
 
 import Notification from './notification';

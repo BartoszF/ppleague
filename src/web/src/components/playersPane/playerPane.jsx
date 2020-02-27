@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import './playerPane.css';
 import _ from 'lodash';
 import { Avatar, Button, Icon, notification, } from 'antd';
@@ -15,7 +14,6 @@ import MatchService from '../../services/MatchService';
 @inject('matchStore')
 @observer
 class PlayerPane extends React.Component {
-
   getMatches() {
     const { player } = this.props;
     const { matches } = player;
